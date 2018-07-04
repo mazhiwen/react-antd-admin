@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
-import {Layout,Menu,Breadcrumb} from 'antd';
+import {Layout,Menu,Breadcrumb,Dropdown,Icon,Avatar} from 'antd';
 import './App.less';
 import {Route } from 'react-router-dom'
 import Home from './views/Home';
@@ -9,21 +9,45 @@ import MenuList from './components/MenuList/';
 const {Header,Sider,Content}=Layout;
 class App extends Component {
   render() {
+    const menu=(
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">1st menu item</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">2nd menu item</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
+        </Menu.Item>
+      </Menu>
+    );
     return (
       this.props["location"]["pathname"]!=='/login'?
       <Layout>
         <Header className="header">
-          <div className="logo" />
-          <Menu
+          <div className="logo">
+            Second Life
+          </div>
+          {/* <Menu
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
           >
-            {/* <Menu.Item key="1">nav 1</Menu.Item>
+            <Menu.Item key="1">nav 1</Menu.Item>
             <Menu.Item key="2">nav 2</Menu.Item>
-            <Menu.Item key="3">nav 3</Menu.Item> */}
-          </Menu>
+            <Menu.Item key="3">nav 3</Menu.Item>
+          </Menu> */}
+          <div className="user">
+            <Dropdown  overlay={menu}>
+              <Avatar size="large">
+                的
+              </Avatar>
+            </Dropdown>
+          </div>
+          
+          
         </Header>
 
         <Layout>

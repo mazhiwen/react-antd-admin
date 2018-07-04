@@ -5,7 +5,7 @@ import {Card, Form, Icon, Input, Button, Checkbox,notification } from 'antd';
 import {  connect } from 'react-redux';
 import localForage from '../../utils/localForage';
 import {axios} from '../../utils/axios';
-
+import {withRouter} from "react-router-dom";
 class LoginOrigin extends React.Component {
   constructor(props){
     super(props);
@@ -28,7 +28,7 @@ class LoginOrigin extends React.Component {
             localForage.setItem('account',values.account);
             localForage.setItem('password',values.password);
             localForage.setItem('token',res.data.token);
-            // this.context.router.history.push("/home");
+            this.props.history.push('/home');
           })
           .catch((res)=>{
             return false;
@@ -142,6 +142,6 @@ function mapDispatchToProps(dispatch) {
 
 
 
-const Login = connect(mapStateToProps,mapDispatchToProps)(Form.create()(LoginOrigin));
+const Login = withRouter(connect(mapStateToProps,mapDispatchToProps)(Form.create()(LoginOrigin)));
 // const Login = Form.create()(LoginOrigin);
 export default Login
