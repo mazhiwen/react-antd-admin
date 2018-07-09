@@ -6,9 +6,32 @@ import {Route } from 'react-router-dom'
 import Home from './views/Home';
 import Login from './views/Login';
 import MenuList from './components/MenuList/';
+import localForage from './utils/localForage';
 const {Header,Sider,Content}=Layout;
+
+
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      account:''
+    };
+
+    
+    
+  }
+
+  componentDidMount(){
+    localForage.getItem('account',(err,v)=>{
+      this.setState({
+        account:v
+      });
+      
+    });
+
+  }
   render() {
+  
     const menu=(
       <Menu>
         <Menu.Item>
@@ -42,7 +65,7 @@ class App extends Component {
           <div className="user">
             <Dropdown  overlay={menu}>
               <Avatar size="large">
-                的
+                {this.state.account}
               </Avatar>
             </Dropdown>
           </div>
