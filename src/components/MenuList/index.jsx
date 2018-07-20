@@ -14,8 +14,8 @@ const menus = [
         text:'默认页面'
       },
       {
-        path:'/about',
-        text:'about'
+        path:'/gamelist',
+        text:'gamelist'
       }
     ]
   },
