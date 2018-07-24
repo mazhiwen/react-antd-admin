@@ -4,7 +4,8 @@ import {Layout,Menu,Breadcrumb,Dropdown,Icon,Avatar} from 'antd';
 import './App.less';
 import {Route } from 'react-router-dom'
 import Home from './views/Home';
-import GameList from './views/GameList';
+import gameList from './views/game/list';
+import game from './views/game';
 import Login from './views/Login';
 import MenuList from './components/MenuList/';
 import localForage from './utils/localForage';
@@ -88,8 +89,11 @@ class App extends Component {
             </Breadcrumb>
             <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 680 }}>
               
-              <Route exact={true} path="/home" component={Home}/>
-              <Route path="/gamelist" component={GameList}/>
+              <Route path="/home" component={Home}/>
+              
+              <Route path="/game" component={game}/>
+                
+              
             </Content>
           </Layout>
         </Layout>
