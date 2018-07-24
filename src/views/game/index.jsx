@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Route } from 'react-router-dom'
 import gameList from './list';
-import gameAdd from './list';
+import gameAdd from './add';
 
 class game extends React.Component {
   
