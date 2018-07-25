@@ -28,7 +28,7 @@ const menus = [
     children:[
       {
         key:'games',
-        path:'/game/list',
+        path:'/game/lists',
         text:'games'
       }
     ]
@@ -42,7 +42,13 @@ class MenuList extends React.Component{
     };
   }
   componentDidMount(){
+    //根据location /aaa/b aaa值作为激活导航栏item
+    this.setState({
+      selectedKeys:[this.props.location.pathname.match(/\/([^/]*)/)[1]]
+    });
     this.props.history.listen((location, action)=>{
+      console.log(location);
+      // this.setState(location.state);
       this.setState({
         selectedKeys:[location.pathname.match(/\/([^/]*)/)[1]]
       });
@@ -56,7 +62,7 @@ class MenuList extends React.Component{
       <Menu
         mode="inline"
         selectedKeys={this.state.selectedKeys}
-        openKeys={['0']}
+        // openKeys={['0']}
         style={{ height: '100%', borderRight: 0 }}
         
       >
@@ -72,7 +78,14 @@ class MenuList extends React.Component{
             >
               {
                 v.children&&v.children.map((vSub,indexSub)=>
-                  <Menu.Item key={vSub.key}><Link to={vSub.path}>{vSub.text}</Link></Menu.Item>
+                  <Menu.Item key={vSub.key}>
+                    <Link 
+                      to={{
+                        pathname:vSub.path
+                      }}>
+                      {vSub.text}
+                    </Link>
+                  </Menu.Item>
                 )
               }
             </SubMenu>
