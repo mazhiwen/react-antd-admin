@@ -80,5 +80,5 @@ class GameListOrigin extends React.Component{
     )
   }
 }
-const gameList=withRouter(Form.create()(GameListOrigin));
-export default gameList
+
+export default withRouter(Form.create()(GameListOrigin))
