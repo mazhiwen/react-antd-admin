@@ -30,6 +30,9 @@ class GameListOrigin extends React.Component{
     this.props.form.validateFieldsAndScroll((err, values) => {
       console.log(values);
       if (!err) {
+        axios.put('/game/create',values).then((r)=>{
+
+        });
         console.log('Received values of form: ', values);
       }
     });
