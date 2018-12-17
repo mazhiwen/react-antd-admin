@@ -8,28 +8,88 @@ const { SubMenu } = Menu;
 const menus = [
   {
     
-    text:'功能',
+    text:'概览',
     children:[
       {
         key:'home',//菜单唯一key值，作为菜单激活样式判断依据
         path:'/home',
-        text:'首页'
-      },
-      {
-        key:'game',
-        path:'/game/list',
-        text:'game'
+        text:'概览'
       }
     ]
   },
   {
-    // path:'/aa',
-    text:'账户',
+    text:'首页',
     children:[
       {
         key:'games',
         path:'/game/lists',
-        text:'games'
+        text:'今日热门'
+      },
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'评分排行'
+      }
+    ]
+  },
+  {
+    text:'游戏',
+    children:[
+      {
+        key:'game',
+        path:'/game/list',
+        text:'游戏列表'
+      },
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'配置'
+      }
+
+    ]
+  },
+  {
+    text:'社区',
+    children:[
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'账户'
+      },
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'文章'
+      },
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'问答'
+      },
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'动态'
+      }
+    ]
+  },
+  {
+    text:'广告',
+    children:[
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'广告列表'
+      }
+    ]
+  },
+  {
+    text:'运营账户',
+    children:[
+      {
+        key:'games',
+        path:'/game/lists',
+        text:'列表'
       }
     ]
   }

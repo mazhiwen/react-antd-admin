@@ -24,7 +24,7 @@ class GameListOrigin extends React.Component{
     this.props.history.push('/game/add');
   }
   componentDidMount(){
-    this.getGameList();
+    // this.getGameList();
   }
   render(){
 
