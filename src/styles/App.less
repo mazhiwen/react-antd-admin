@@ -31,15 +31,31 @@
 .header {
   display: flex;
   justify-content:space-between;
+  .header_left{
+    display: inline-flex;
 
+  }
   .logo {
     width: 120px;
-    height: 31px;
-    margin: 16px 28px 16px 0;
-    line-height: 31px;
     color: white;
   }
-  .user{
+  .top_menu{
+    line-height: @layout-header-height;
+    >.ant-menu-item{
+      padding: 0;
+      >.ant-dropdown-trigger{
+        padding: 0 20px;
+      }
+    }
+  }
+  .header_right{
+    cursor: pointer;
+    >.ant-dropdown-trigger{
+      // height: 50px;
+    }
+    .ant-avatar-lg{
+      margin-bottom: 3px;
+    }
     
   }
 

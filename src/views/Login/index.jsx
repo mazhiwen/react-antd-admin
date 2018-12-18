@@ -1,45 +1,40 @@
 import * as React from 'react';
-import './index.less';
 import {Card, Form, Icon, Input, Button, Checkbox,notification } from 'antd';
 // import { FormComponentProps } from 'antd/lib/form';
 import {  connect } from 'react-redux';
-import localForage from '../../utils/localForage';
-import {axios} from '../../utils/axios';
+import { authToken, authMobile,xMerchantId,API,XPARTNERCODE,partnerCode} from 'configs';
+
+import {axios,localForage} from 'utils';
 import {withRouter} from "react-router-dom";
-class LoginOrigin extends React.Component {
+class ComponentInstance extends React.Component {
   constructor(props){
     super(props);
     this.state={
       isLogin:true
     };
   }
+
   handleLogin = (e) => {
     e.preventDefault();
-    
     this.props["form"].validateFields((err, values) => {
-      if (!err) {
-        
-        axios.post('/users/login',{
-          account:values.account,
+      if (!err) { 
+        axios.post('/admin/login',{
+          mobile:values.mobile,
           password:values.password
         })
           .then(res=> {
             
-            localForage.setItem('account',values.account);
-            localForage.setItem('password',values.password);
-            localForage.setItem('token',res.data.token);
-            this.props.history.push('/home');
+            // localForage.setItem('mobile',values.mobile);
+            // localForage.setItem('password',values.password);
+            // localForage.setItem('token',res.data.token);
+            // this.props.history.push('/home');
           })
           .catch((res)=>{
             return false;
           });
-        
       }
     });
   }
-
-  
-
   handleRegister = (e) => {    
     this.props["form"].validateFields((err, values) => {
       if (!err) {        
@@ -55,21 +50,22 @@ class LoginOrigin extends React.Component {
           })
           .catch((res)=>{
             return false;
-          });
-          
+          });  
       }
     });
   }
-  
   registHandler=()=>{
     this.setState({
       isLogin:false
     });
   }
+
+  componentDidMount(){
+    let params = new URLSearchParams(this.props.location.search);
+    localForage.setItem(XPARTNERCODE,params.get(partnerCode));
+
+  }
   render(){
-    
-    
-    
     // const {value} = this.props;
     const { getFieldDecorator } = this.props['form'];
     return(
@@ -78,7 +74,7 @@ class LoginOrigin extends React.Component {
           
           <Form onSubmit={this.handleLogin} className="login-form">
             <Form.Item>
-              {getFieldDecorator('account', {
+              {getFieldDecorator('mobile', {
                 rules: [{ required: true, message: 'Please input your username!' }],
               })(
                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
@@ -142,6 +138,6 @@ function mapDispatchToProps(dispatch) {
 
 
 
-const Login = withRouter(connect(mapStateToProps,mapDispatchToProps)(Form.create()(LoginOrigin)));
-// const Login = Form.create()(LoginOrigin);
+const Login = withRouter(connect(mapStateToProps,mapDispatchToProps)(Form.create()(ComponentInstance)));
+// const Login = Form.create()(ComponentInstance);
 export default Login
