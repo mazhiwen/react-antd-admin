@@ -4,7 +4,7 @@ import {Card, Form, Icon, Input, Button, Checkbox,notification } from 'antd';
 import {  connect } from 'react-redux';
 import { authToken, authMobile,xMerchantId,API,XPARTNERCODE,partnerCode} from 'configs';
 
-import {axios,localForage} from 'utils';
+import {axios,localForage,md5} from 'utils';
 import {withRouter} from "react-router-dom";
 class ComponentInstance extends React.Component {
   constructor(props){
@@ -18,9 +18,9 @@ class ComponentInstance extends React.Component {
     e.preventDefault();
     this.props["form"].validateFields((err, values) => {
       if (!err) { 
-        axios.post('/admin/login',{
+        axios.post('admin/login',{
           mobile:values.mobile,
-          password:values.password
+          password:md5(values.password)
         })
           .then(res=> {
             

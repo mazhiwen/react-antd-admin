@@ -33,7 +33,6 @@ async function request(config) {
 
   // current server
   else config.url = `${prefix}${input}`;
-  console.log(config);
   return config;
 }
 function useOrigin(res) {
