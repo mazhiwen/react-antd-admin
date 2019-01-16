@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
-import {Layout,Menu,Breadcrumb,Dropdown,Icon,Avatar} from 'antd';
+import {Layout,
+} from 'antd';
 import './styles/index.less';
-import {Route } from 'react-router-dom'
-import Home from './views/Home';
-import gameList from './views/game/list';
-import game from './views/game';
-import Login from './views/Login';
+import {Route,Switch } from 'react-router-dom'
+import Login from './views/login';
 import MenuList from './components/MenuList/';
-import localForage from './utils/localForage';
 import MainHeader from './components/MainHeader';
+import routes from 'routes';
+import {localForage} from 'utils';
+import PrivateRoute from './components/PrivateRoute';
 
-const {Header,Sider,Content}=Layout;
+const {Sider,Content}=Layout;
+
+
+
+
 
 
 class App extends Component {
@@ -30,29 +34,11 @@ class App extends Component {
   }
 
   componentDidMount(){
-    localForage.getItem('account',(err,v)=>{
-      this.setState({
-        account:v
-      });
-      
-    });
-
+    
+    
   }
+  
   render() {
-
-    const menu=(
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">1st menu item</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">2nd menu item</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
-        </Menu.Item>
-      </Menu>
-    );
     return (
       this.props["location"]["pathname"]!=='/login'?
       <Layout>
@@ -62,21 +48,40 @@ class App extends Component {
           <Sider width={200} style={{ background: '#fff' }}>
             <MenuList/>
           </Sider>
-          <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item><span>{1}</span></Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
-            </Breadcrumb>
-            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 680 }}>  
-              <Route path="/home" component={Home}/>  
-              <Route path="/game" component={game}/>
+          <Layout style={{ padding: '10px' }}>
+            <Content style={{  margin: 0, minHeight: 1000 }}>
+              <Switch>
+                <PrivateRoute auth={false} 
+                  path='/' exact
+                  component={routes.home.component}
+                />        
+                <PrivateRoute auth={routes.home.auth} 
+                  path={routes.home.path} 
+                  component={routes.home.component}
+                />  
+                <PrivateRoute auth={routes.applylist.auth} 
+                  path={routes.applylist.path} 
+                  component={routes.applylist.component}
+                /> 
+                <PrivateRoute auth={routes.applydetail.auth} 
+                  path={routes.applydetail.path} 
+                  component={routes.applydetail.component}
+                />
+                <PrivateRoute auth={routes.system.children.query.auth} 
+                  path={routes.system.children.query.path} 
+                  component={routes.system.children.query.component}
+                />
+                <PrivateRoute auth={routes.system.children.myorders.auth} 
+                  path={routes.system.children.myorders.path} 
+                  component={routes.system.children.myorders.component}
+                />
+              </Switch>  
             </Content>
           </Layout>
-        </Layout>
+        </Layout> 
         
       </Layout>:
-      <Login />
+      <Login/>
       
       
     );

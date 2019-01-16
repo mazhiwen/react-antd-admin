@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const paths = require('./paths');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
-
+const webpack = require('webpack');
 module.exports = {
   module: {
     strictExportPresence: true,
@@ -32,6 +32,10 @@ module.exports = {
     ]           
   },
   plugins: [
+    // new webpack.ProvidePlugin({
+    //   Fragment: ['React','Fragment'],
+    //   // ...
+    // })
   ],
   resolve:{
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -58,7 +62,9 @@ module.exports = {
       // 'routes':path.resolve(__dirname, '../src/routes'),
       'components':path.resolve(__dirname, '../src/components'),
       'utils':path.resolve(__dirname, '../src/utils'),
-      'configs':path.resolve(__dirname, '../src/configs')
+      'configs':path.resolve(__dirname, '../src/configs'),
+      'routes':path.resolve(__dirname, '../src/routes'),
+      'views':path.resolve(__dirname, '../src/views')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

@@ -4,22 +4,39 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-import { BrowserRouter,Route } from 'react-router-dom';
-import loginReducer from './reducers/loginReducer';
+import { Route,Router } from 'react-router-dom';
+import reducers from './reducers';
 import { createStore } from 'redux';
 import { Provider} from 'react-redux';
+// import history from './utils/history'
+import { authToken} from 'configs';
+
+import {localForage,history} from 'utils';
 
 
+let store =null;
 
-const store = createStore(loginReducer);
-ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <Route path="/" component={App}/>
-    </BrowserRouter>
-  </Provider>
-  ,
-  document.getElementById('root')
-);
+localForage.getItem(authToken)
+.then(function(value) {
+  let LOGINSTATUS=value!==null;
+  store = createStore(reducers,{login:{
+    LOGINSTATUS
+  }});
+})
+.catch(function(err) {
+})
+.finally(()=>{
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={history}>
+        <Route path="/" component={App}/>
+      </Router>
+    </Provider>
+    ,
+    document.getElementById('root')
+  );
+  
+  registerServiceWorker();
+});
 
-registerServiceWorker();
+

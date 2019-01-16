@@ -1,154 +1,142 @@
 import * as React from 'react';
 import {Menu,Icon} from 'antd';
-import { Link } from 'react-router-dom'
-import { withRouter } from 'react-router-dom';
+import { Link ,withRouter,NavLink} from 'react-router-dom'
+import routes from 'routes';
+import {axios,localForage,permission,history} from 'utils';
 
 const { SubMenu } = Menu;
 
-const menus = [
-  {
-    
-    text:'概览',
-    children:[
-      {
-        key:'home',//菜单唯一key值，作为菜单激活样式判断依据
-        path:'/home',
-        text:'概览'
-      }
-    ]
-  },
-  {
-    text:'首页',
-    children:[
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'今日热门'
-      },
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'评分排行'
-      }
-    ]
-  },
-  {
-    text:'游戏',
-    children:[
-      {
-        key:'game',
-        path:'/game/list',
-        text:'游戏列表'
-      },
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'配置'
-      }
-
-    ]
-  },
-  {
-    text:'社区',
-    children:[
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'账户'
-      },
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'文章'
-      },
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'问答'
-      },
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'动态'
-      }
-    ]
-  },
-  {
-    text:'广告',
-    children:[
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'广告列表'
-      }
-    ]
-  },
-  {
-    text:'运营账户',
-    children:[
-      {
-        key:'games',
-        path:'/game/lists',
-        text:'列表'
-      }
-    ]
-  }
-]
-class MenuList extends React.Component{
+ 
+class ComponentInstance extends React.Component{
   constructor(props){
     super(props);
     this.state={
-      selectedKeys:['home']
+      selectedKeys:['0','1'],
+      menuMap:{},
+      openKeys:[],
+      nestedMenus : [
+        {
+          label:'全部',
+          url:routes.home.path,
+          id:'home'
+          
+        },
+        {
+          label:'富士康',
+          children:[
+            {
+              id:'games',
+              url:`${routes.applylist.base}/all`,
+              label:'富士康'
+            }
+          ],
+          id:'homee'
+        }
+      ]
+
+    };
+    
+  }
+  onOpenChange=(openKeys)=>{
+    this.setState({openKeys});
+  }
+  
+  componentDidMount(){
+    permission.getPermission('anti-fraud','view,menu,route')
+      .then((value)=>{
+        console.log(value);
+        const {nestedMenus,menuMap} =value;
+        this.setState({
+          nestedMenus,
+          menuMap
+        })
+        // url -> 子菜单 父菜单
+        //根据location /aaa/b aaa值作为激活导航栏item
+        function urlToMenu(url){
+          let match = url.match(/(\/[^\/]*){1}/g);
+          if(match.length>=2){
+            return `${match[0]}${match[1]}`;
+          }else{
+            return `${match[0]}`;
+          }
+          
+        }
+        function getSelectMenu(url){
+          return menuMap[urlToMenu(url)];
+        }
+        if(getSelectMenu(this.props.location.pathname)){
+          let selectMenuData=getSelectMenu(this.props.location.pathname);
+          this.setState({
+            selectedKeys:[selectMenuData['id']],
+            openKeys:[selectMenuData['parent']]
+          });
+        }
+        
+        //下段 会引起react 报错 state 在 componentWillUnmount中重置state
+        this.props.history.listen((location, action)=>{
+          if(getSelectMenu(location.pathname)){
+            let selectMenuData=getSelectMenu(location.pathname);
+            this.setState({
+              selectedKeys:[selectMenuData['id']]
+            });
+          }
+          
+        });
+      });
+   
+
+  }
+  componentWillUnmount(){
+    this.setState = (state,callback)=>{
+      return;
     };
   }
-  componentDidMount(){
-    //根据location /aaa/b aaa值作为激活导航栏item
-    this.setState({
-      selectedKeys:[this.props.location.pathname.match(/\/([^/]*)/)[1]]
-    });
-    this.props.history.listen((location, action)=>{
-      console.log(location);
-      // this.setState(location.state);
-      this.setState({
-        selectedKeys:[location.pathname.match(/\/([^/]*)/)[1]]
-      });
-    });
-
-    
-
-  }
   render(){
+    const {nestedMenus,selectedKeys,openKeys} = this.state;
     return(
       <Menu
         mode="inline"
-        selectedKeys={this.state.selectedKeys}
-        // openKeys={['0']}
+        selectedKeys={selectedKeys}
+        openKeys={openKeys}
+        onOpenChange={this.onOpenChange}
         style={{ height: '100%', borderRight: 0 }}
         
       >
         {
-          menus.map((v,index)=>
-            <SubMenu 
-              key={index} 
-              title={
-                <span><Icon type="user" />
-                  {v.path?(<Link to={v.path}>{v.text}</Link>):(v.text)}
-                </span>
-              }
-            >
-              {
-                v.children&&v.children.map((vSub,indexSub)=>
-                  <Menu.Item key={vSub.key}>
-                    <Link 
-                      to={{
-                        pathname:vSub.path
-                      }}>
-                      {vSub.text}
-                    </Link>
-                  </Menu.Item>
-                )
-              }
-            </SubMenu>
+          nestedMenus.map((v,index)=>
+            v.children?(
+              <SubMenu 
+                key={v.id} 
+                title={
+                  <span>
+                    <Icon type="bars" />
+                    {/* {v.url?(<Link to={v.url}>{v.label}</Link>):(v.label)} */}
+                    {v.label}
+                  </span>
+                }
+              >
+                {
+                  v.children.map((vSub,indexSub)=>
+                    <Menu.Item key={vSub.id}>
+                      <NavLink 
+                        to={{
+                          pathname:vSub.url
+                        }}
+                        
+                      >
+                        {vSub.label}
+                      </NavLink>
+                      
+                    </Menu.Item>
+                  )
+                }
+              </SubMenu>
+            ):(
+              <Menu.Item key={v.id}>
+                <Icon type="bars" />
+                <span><Link to={v.url}>{v.label}</Link></span>
+              </Menu.Item>
+            )
           )
         }
       </Menu>
@@ -156,4 +144,4 @@ class MenuList extends React.Component{
   }
 }
 
-export default withRouter(MenuList)
+export default withRouter(ComponentInstance)

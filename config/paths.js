@@ -3,13 +3,16 @@
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
-
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
+const packageJsonObj=require('../package.json');
+//contextPath 取packagejson 文件 welab.contextPath字段 作为
+//public build dist目录 index.html base url
+const contextPath=packageJsonObj.welab.contextPath;
 
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');
@@ -39,17 +42,24 @@ function getServedPath(appPackageJson) {
 }
 
 // config after eject: we're in ./config/
+
 module.exports = {
   dotenv: resolveApp('.env'),
-  appBuild: resolveApp('build'),
+  appPackageJson: resolveApp('package.json'),
+  // appPackageJson,
+  appBuild: resolveApp('dist/'+contextPath),
+  // appBuild: resolveApp('dist'),
   appPublic: resolveApp('public'),
+  
+  // appPublic: contextPath,
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveApp('src/index.js'),
-  appPackageJson: resolveApp('package.json'),
+  contextPath,
   appSrc: resolveApp('src'),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
-  servedPath: getServedPath(resolveApp('package.json')),
+  // servedPath: getServedPath(resolveApp('package.json'))
+  servedPath: './',
 };

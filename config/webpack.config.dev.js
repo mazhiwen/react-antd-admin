@@ -21,7 +21,7 @@ const publicPath = '/';
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
 const publicUrl = '';
 // Get environment variables to inject into our app.
-const env = getClientEnvironment(publicUrl);
+const env = getClientEnvironment({publicUrl});
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -104,38 +104,38 @@ module.exports = webpackMerge(webpackBaseConfig,{
           // "style" loader turns CSS into JS modules that inject <style> tags.
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
-          {
-            test: /\.css$/,
-            use: [
-              require.resolve('style-loader'),
-              {
-                loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                },
-              },
-              {
-                loader: require.resolve('postcss-loader'),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      browsers: [
-                        '>1%',
-                        'last 4 versions',
-                        'Firefox ESR',
-                        'not ie < 9', // React doesn't support IE8 anyway
-                      ],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
-              },
-            ],
-          },
+          // {
+          //   test: /\.css$/,
+          //   use: [
+          //     require.resolve('style-loader'),
+          //     {
+          //       loader: require.resolve('css-loader'),
+          //       options: {
+          //         importLoaders: 1,
+          //       },
+          //     },
+          //     {
+          //       loader: require.resolve('postcss-loader'),
+          //       options: {
+          //         // Necessary for external CSS imports to work
+          //         // https://github.com/facebookincubator/create-react-app/issues/2677
+          //         ident: 'postcss',
+          //         plugins: () => [
+          //           require('postcss-flexbugs-fixes'),
+          //           autoprefixer({
+          //             browsers: [
+          //               '>1%',
+          //               'last 4 versions',
+          //               'Firefox ESR',
+          //               'not ie < 9', // React doesn't support IE8 anyway
+          //             ],
+          //             flexbox: 'no-2009',
+          //           }),
+          //         ],
+          //       },
+          //     },
+          //   ],
+          // },
           {
             // test: /\.css$/,
             test: /\.(css|less)$/,
@@ -213,7 +213,7 @@ module.exports = webpackMerge(webpackBaseConfig,{
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
-      template: paths.appHtml,
+      template: paths.appHtml
     }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),

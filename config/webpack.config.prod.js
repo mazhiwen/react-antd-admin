@@ -14,9 +14,12 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const webpackBaseConfig=require('./webpack.config.base');
 const webpackMerge = require('webpack-merge');
+const project=require('../src/configs/project');
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
+
 // Some apps do not use client-side routing with pushState.
 // For these, "homepage" can be set to "." to enable relative asset paths.
 const shouldUseRelativeAssetPaths = publicPath === './';
@@ -27,13 +30,12 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
 const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
-const env = getClientEnvironment(publicUrl);
-
+const env = getClientEnvironment({publicUrl});
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
-if (env.stringified['process.env'].NODE_ENV !== '"production"') {
-  throw new Error('Production builds must have NODE_ENV=production.');
-}
+// if (env.stringified['process.env'].NODE_ENV !== '"production"') {
+//   throw new Error('Production builds must have NODE_ENV=production.');
+// }
 
 // Note: defined here because it will be used more than once.
 const cssFilename = 'static/css/[name].[contenthash:8].css';
@@ -50,6 +52,7 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
+
 module.exports = webpackMerge(webpackBaseConfig,{
   // Don't attempt to continue if there are any errors.
   bail: true,
@@ -59,6 +62,7 @@ module.exports = webpackMerge(webpackBaseConfig,{
   // In production, we only want to load the polyfills and the app code.
   entry: [require.resolve('./polyfills'), paths.appIndexJs],
   output: {
+
     // The build folder.
     path: paths.appBuild,
     // Generated JS file names (with nested folders).
@@ -114,7 +118,7 @@ module.exports = webpackMerge(webpackBaseConfig,{
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
           {
-            test: /\.css$/,
+            test: /\.(css|less)$/,
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -153,6 +157,19 @@ module.exports = webpackMerge(webpackBaseConfig,{
                         ],
                       },
                     },
+                    {
+                      loader: require.resolve('less-loader'), // compiles Less to CSS
+                      //antd 定制主题
+                      options: {
+                        modifyVars: {
+                          // 'layout-header-height':'50px'
+                          // 'primary-color': 'red',
+                          // 'link-color': '#1DA57A',
+                          // 'border-radius-base': '2px',
+                        },
+                        javascriptEnabled: true,
+                      },
+                    }
                   ],
                 },
                 extractTextPluginOptions
@@ -192,6 +209,10 @@ module.exports = webpackMerge(webpackBaseConfig,{
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
+      // favicon: './src/images/favicon.png',
+      href: '/'+ paths.contextPath +'/',
+      title:project.appName,
+      // href: '/',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
