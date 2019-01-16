@@ -16,38 +16,38 @@ const configs = {
   XPARTNERCODE: 'X-PARTNER-CODE',
   partnerCode: 'partnerCode',
   expires: 1, // day
-  domain: '.wolaidai.com',
+  domain: '.domain.com',
   // 分支和环境名称一致
   API: {
     'master': {
-      iamPrefix: 'https://saas-dev.wolaidai.com/',
-      prefix: 'https://japi-dev.wolaidai.com/welab-anti-fraud/'
+      iamPrefix: 'https://dev.domain.com/',
+      prefix: 'https://japi-dev.domain.com/welab-anti-fraud/'
     },
     'integration': {
-      iamPrefix: 'https://saas-fat.wolaidai.com/',
-      prefix: 'https://japi-fat.wolaidai.com/welab-anti-fraud/',
+      iamPrefix: 'https://saas-fat.domain.com/',
+      prefix: 'https://japi-fat.domain.com/welab-anti-fraud/',
     },
     'pre-production': {
-      iamPrefix: 'https://saas-uat.wolaidai.com/',
-      prefix: 'https://japi-uat.wolaidai.com/judex/api/'
+      iamPrefix: 'https://saas-uat.domain.com/',
+      prefix: 'https://japi-uat.domain.com/judex/api/'
     },
     'production': {
-      iamPrefix: 'https://saas.wolaidai.com/',
-      prefix: 'https://channels.wolaidai.com/judex/api/',
+      iamPrefix: 'https://saas.domain.com/',
+      prefix: 'https://channels.domain.com/judex/api/',
     }
   },
   // basename: {
   //   'master': {
-  //     prefix: 'https://m-dev.wolaidai.com/judex/api/'
+  //     prefix: 'https://m-dev.domain.com/judex/api/'
   //   },
   //   'integration': {
-  //     prefix: 'https://m-fat.wolaidai.com/judex/api/'
+  //     prefix: 'https://m-fat.domain.com/judex/api/'
   //   },
   //   'pre-production': {
-  //     prefix: 'https://japi-uat.wolaidai.com/judex/api/'
+  //     prefix: 'https://japi-uat.domain.com/judex/api/'
   //   },
   //   'production': {
-  //     prefix: 'https://channels.wolaidai.com/judex/api/',
+  //     prefix: 'https://channels.domain.com/judex/api/',
   //   }
   // },
   stateList,
