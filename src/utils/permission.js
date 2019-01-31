@@ -21,46 +21,54 @@ function arrayToObject(array=[],keyName,valueName) {
 }
 
 export function getPermission (systemCode,type) {
-  return axios
-    .get(`welab-authority/v1/system-code/${systemCode}/owner-resources`,{params:{type}})
+  return new Promise(function(resolve, reject){
+    axios
+    .get(`companyXXX-authority/v1/system-code/${systemCode}/owner-resources`,{params:{type}})
     .then((res) => {
-      let views = [], menus = [], routes = [];
+      if(res){
+        let views = [], menus = [], routes = [];
       
-      const { result } = res;
-      if(result){
+        const { result } = res;
+        if(result){
+          
         
-      
-        for (let item of result) {
-          if (item.type === 'route') routes.push(item);
-          if (item.type === 'view') views.push(item);
-          if (item.type === 'menu') menus.push({label:item.name,url:item.url,parent:item.parentId,id:item.id,icon:item.icon});
-        }
-        // format
-        // menus = menus.map(item=>({label:item.name,name:item.url,parent:item.parentId,id:item.id}))
-        // make nested array
-        const nestedMenus = getNestedChildren(menus,'0');
-        // find sub menus for menu component
-        const mainNestedMenus = findMenu(nestedMenus, 'main');
-        // make a object for views permission checking
-        const viewsMap = arrayToObject(views,'url','id');
-        // make a object for routes permission checking
-        const routesMap = arrayToObject(routes,'url','id');
-        //menumap  url>id
-        const menuMap={};
-        menus.forEach((value,index)=>{
-          menuMap[value.url]={
-            id: value.id,
-            parent:value.parent
+          for (let item of result) {
+            if (item.type === 'route') routes.push(item);
+            if (item.type === 'view') views.push(item);
+            if (item.type === 'menu') menus.push({label:item.name,url:item.url,parent:item.parentId,id:item.id,icon:item.icon});
           }
-        })
-        // return menbers
-        return { 
-          views, menus, routes, nestedMenus, 
-          mainNestedMenus, viewsMap, routesMap,
-          menuMap
+          // format
+          // menus = menus.map(item=>({label:item.name,name:item.url,parent:item.parentId,id:item.id}))
+          // make nested array
+          const nestedMenus = getNestedChildren(menus,'0');
+          // find sub menus for menu component
+          const mainNestedMenus = findMenu(nestedMenus, 'main');
+          // make a object for views permission checking
+          const viewsMap = arrayToObject(views,'url','id');
+          // make a object for routes permission checking
+          const routesMap = arrayToObject(routes,'url','id');
+          //menumap  url>id
+          const menuMap={};
+          menus.forEach((value,index)=>{
+            menuMap[value.url]={
+              id: value.id,
+              parent:value.parent
+            }
+          })
+          // return menbers
+          resolve ({ 
+            views, menus, routes, nestedMenus, 
+            mainNestedMenus, viewsMap, routesMap,
+            menuMap
+          })
         }
+      }else{
+        reject();
       }
+      
     })
+  })
+  
 }
 
 export function hasPermission (permissions, permission) {

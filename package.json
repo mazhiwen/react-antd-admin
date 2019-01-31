@@ -1,14 +1,14 @@
 {
   "name": "h5-judex",
-  "welab": {
-    "contextPath": "welabantifraud"
+  "companyXXX": {
+    "contextPath": "companyXXXantifraud"
   },
   "version": "0.1.0",
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "@welab/welab-utilities": "^1.0.13",
-    "antd": "^3.11.6",
+    "@companyXXX/companyXXX-utilities": "^1.0.13",
+    "antd": "^3.13.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "babel-core": "6.26.0",

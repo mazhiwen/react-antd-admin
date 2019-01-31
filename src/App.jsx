@@ -48,7 +48,7 @@ class App extends Component {
           <Sider width={200} style={{ background: '#fff' }}>
             <MenuList/>
           </Sider>
-          <Layout style={{ padding: '10px' }}>
+          <Layout className="content_layout" >
             <Content style={{  margin: 0, minHeight: 1000 }}>
               <Switch>
                 <PrivateRoute auth={false} 
@@ -74,6 +74,18 @@ class App extends Component {
                 <PrivateRoute auth={routes.system.children.myorders.auth} 
                   path={routes.system.children.myorders.path} 
                   component={routes.system.children.myorders.component}
+                />
+                <PrivateRoute auth={routes.system.children.orderdetails.auth} 
+                  path={routes.system.children.orderdetails.path} 
+                  component={routes.system.children.orderdetails.component}
+                />
+                <PrivateRoute auth={routes.blacklist.children.list.auth} 
+                  path={routes.blacklist.children.list.path} 
+                  component={routes.blacklist.children.list.component}
+                />
+                <PrivateRoute auth={routes.blacklist.children.add.auth} 
+                  path={routes.blacklist.children.add.path} 
+                  component={routes.blacklist.children.add.component}
                 />
               </Switch>  
             </Content>

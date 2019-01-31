@@ -10,9 +10,9 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 const packageJsonObj=require('../package.json');
-//contextPath 取packagejson 文件 welab.contextPath字段 作为
+//contextPath 取packagejson 文件 companyXXX.contextPath字段 作为
 //public build dist目录 index.html base url
-const contextPath=packageJsonObj.welab.contextPath;
+const contextPath=packageJsonObj.companyXXX.contextPath;
 
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');

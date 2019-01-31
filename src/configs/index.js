@@ -1,14 +1,17 @@
 import pushBackReason from './pushBackReason'; 
 import stateList from './stateList'; 
 import project from './project'; 
+import * as blackTypeTreeData  from './blackTypeTreeData'; 
+import packageJsonObj from '../../package.json';
 
 const configs = {
   ...project,
+  contextPath:packageJsonObj.companyXXX.contextPath,
   name:'name',
+  ...blackTypeTreeData,
   authToken: 'x-user-token',
   authMobile: 'x-user-mobile',
   xMerchantId: 'x-merchant-id',
-  storagePrefix: 'judex',
   checkItemInfo: 'checkItemInfo',
   userPassword: 'userPassword',
   industryInvolved: 'industryInvolved',
@@ -16,76 +19,84 @@ const configs = {
   XPARTNERCODE: 'X-PARTNER-CODE',
   partnerCode: 'partnerCode',
   expires: 1, // day
-  domain: '.domain.com',
+  domain: '.companyXXX.com',
+  userEmail:'userEmail',
   // 分支和环境名称一致
   API: {
     'master': {
-      iamPrefix: 'https://dev.domain.com/',
-      prefix: 'https://japi-dev.domain.com/welab-anti-fraud/'
+      iamPrefix: 'https://saas-dev.companyXXX.com/',
+      prefix: 'https://japi-dev.companyXXX.com/companyXXX-anti-fraud/'
     },
     'integration': {
-      iamPrefix: 'https://saas-fat.domain.com/',
-      prefix: 'https://japi-fat.domain.com/welab-anti-fraud/',
+      iamPrefix: 'https://saas-fat.companyXXX.com/',
+      prefix: 'https://japi-fat.companyXXX.com/companyXXX-anti-fraud/',
     },
     'pre-production': {
-      iamPrefix: 'https://saas-uat.domain.com/',
-      prefix: 'https://japi-uat.domain.com/judex/api/'
+      iamPrefix: 'https://saas-uat.companyXXX.com/',
+      prefix: 'https://japi-uat.companyXXX.com/judex/api/'
     },
     'production': {
-      iamPrefix: 'https://saas.domain.com/',
-      prefix: 'https://channels.domain.com/judex/api/',
+      iamPrefix: 'https://saas.companyXXX.com/',
+      prefix: 'https://channels.companyXXX.com/judex/api/',
     }
   },
   // basename: {
   //   'master': {
-  //     prefix: 'https://m-dev.domain.com/judex/api/'
+  //     prefix: 'https://m-dev.companyXXX.com/judex/api/'
   //   },
   //   'integration': {
-  //     prefix: 'https://m-fat.domain.com/judex/api/'
+  //     prefix: 'https://m-fat.companyXXX.com/judex/api/'
   //   },
   //   'pre-production': {
-  //     prefix: 'https://japi-uat.domain.com/judex/api/'
+  //     prefix: 'https://japi-uat.companyXXX.com/judex/api/'
   //   },
   //   'production': {
-  //     prefix: 'https://channels.domain.com/judex/api/',
+  //     prefix: 'https://channels.companyXXX.com/judex/api/',
   //   }
   // },
   stateList,
-  relationshipList: [
-    {
+  relationshipList: {
+    parents:{
       "id": 1,
       "name": "parents",
       "description": "父母"
-    }, {
+    }, 
+    spouse:{
       "id": 2,
       "name": "spouse",
       "description": "配偶"
-    }, {
+    }, 
+    sibling:{
       "id": 3,
       "name": "sibling",
       "description": "兄弟姐妹"
-    }, {
+    }, 
+    teacher:{
       "id": 4,
       "name": "teacher",
       "description": "老师"
-    }, {
+    }, 
+    classmate:{
       "id": 5,
       "name": "classmate",
       "description": "同学"
-    }, {
+    }, 
+    friend:{
       "id": 6,
       "name": "friend",
       "description": "朋友"
-    }, {
+    }, 
+    colleague:{
       "id": 7,
       "name": "colleague",
       "description": "同事"
-    }, {
+    }, 
+    children:{
       "id": 8,
       "name": "children",
       "description": "子女"
     }
-  ],
+  },
   roleList: {
     "": "全部",
     "APPROVAL_PRE": "预审",
@@ -147,16 +158,37 @@ const configs = {
       "updatedAt": 1488879520000
     }
   ],
-  "approvalTypeList": [
-    {
-      "id": "0",
-      "name": "全部",
-      "code": "all",
-      "priority": null,
-      "updatedAt": null,
-      "createdAt": null
+  blacklistTypeValueMap: {
+    'loanId':{
+      key:'loanId',
+      text:'贷款号',
+    },
+    'CNID':{
+      key:'cnid',
+      text:'身份证号',
+      addUrl:'cnid'
+    },
+    'PHONE_NUMBER':{
+      key:'phoneNumber',
+      text:'手机号',
+      addUrl:'personal/mobile'
+    },
+    'COMPANY_NAME':{
+      key:'companyName',
+      text:'公司名称',
+      addUrl:'companyName'
+    },
+    'COMPANY_TELEPHONE':{
+      key:'companyTelephone',
+      text:'公司电话',
+      addUrl:'companyTel'
+    },
+    'LISONS_PHONE':{
+      key:'companyTelephone',
+      text:'联系人',
+      addUrl:'liason/mobile'
     }
-  ],
+  },
   "degreeList": [
     {
       "id": 1,

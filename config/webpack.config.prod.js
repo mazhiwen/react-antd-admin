@@ -211,8 +211,8 @@ module.exports = webpackMerge(webpackBaseConfig,{
       template: paths.appHtml,
       // favicon: './src/images/favicon.png',
       href: '/'+ paths.contextPath +'/',
-      title:project.appName,
       // href: '/',
+      title:project.appName,
       minify: {
         removeComments: true,
         collapseWhitespace: true,

@@ -22,6 +22,7 @@ const publicPath = '/';
 const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment({publicUrl});
+const project=require('../src/configs/project');
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -213,7 +214,8 @@ module.exports = webpackMerge(webpackBaseConfig,{
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
-      template: paths.appHtml
+      template: paths.appHtml,
+      title:project.appName
     }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),

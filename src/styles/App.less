@@ -64,6 +64,12 @@ body{
     }
   }
 }
+.content_layout{
+  
+  padding: 30px;
+}
+
+
 
 .gird-table{
   &.table_nothwidth{
@@ -129,7 +135,7 @@ body{
 
 
 
-
+//覆盖antd form样式统一form类
 //内联input布局 设置label宽度和input宽度
 //label文字在左边，input在右边
 .antdformitem_flex{
@@ -149,5 +155,10 @@ body{
     .antdformitem_flex;
   }
 }
-
-
+//formitem 呈 inlineblock水平一行 
+.inlineblock_formwrap{
+  .ant-form-item{
+    margin-bottom: 0; 
+  }
+  
+}

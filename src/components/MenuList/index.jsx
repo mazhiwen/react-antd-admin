@@ -82,6 +82,9 @@ class ComponentInstance extends React.Component{
           }
           
         });
+      })
+      .catch(()=>{
+
       });
    
 
@@ -99,7 +102,7 @@ class ComponentInstance extends React.Component{
         selectedKeys={selectedKeys}
         openKeys={openKeys}
         onOpenChange={this.onOpenChange}
-        style={{ height: '100%', borderRight: 0 }}
+        style={{ height: '100%' }}
         
       >
         {

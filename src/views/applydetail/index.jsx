@@ -291,7 +291,7 @@ class ComponentInstance extends React.Component{
                   <ReportTitleItem title="客户评级" value="8000"/>
                 </Col>
                 <Col span={4}>
-                  <ReportTitleItem title="我来分" value="8000"/>
+                  <ReportTitleItem title="XXX分" value="8000"/>
                 </Col>
               </Row>
             }

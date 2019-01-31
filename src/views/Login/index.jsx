@@ -32,8 +32,9 @@ class ComponentInstance extends React.Component {
     // this.historyPush( routes.home.path);
     this.props["form"].validateFields((err, values) => {
       if (!err) {
-        axios.post('welab-authority/v1/user-login', {...this.params,...values}, { useOrigin: true })
+        axios.post('companyXXX-authority/v1/user-login', {...this.params,...values}, { useOrigin: true })
           .then((res) => {
+            
             const { data: { code = '', message = '' }, headers } = res;
             const token = headers[authToken];
             const mobile = values.loginName;
@@ -83,6 +84,7 @@ class ComponentInstance extends React.Component {
             //   LOGINSTATUS:true
             // })
             this.historyPush( routes.home.path);
+            
           }) 
       }
     });
@@ -110,7 +112,7 @@ class ComponentInstance extends React.Component {
       if(errors&&errors.loginName){
         
       }else{
-        axios.post('welab-authority/v1/send-mobile-code', {
+        axios.post('companyXXX-authority/v1/send-mobile-code', {
           mobile: this.props["form"].getFieldValue('loginName'),
           type: '01',
         })

@@ -15,7 +15,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(value => fieldsError[value]);
 }
 const pageSize=15;
-class ComponentInstance extends React.Component{
+class Query extends React.Component{
 
   constructor(props){
     super(props);
@@ -325,4 +325,4 @@ class ComponentInstance extends React.Component{
   }
 }
 
-export default Form.create()(ComponentInstance)
+export default Form.create()(Query)

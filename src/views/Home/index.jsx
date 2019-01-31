@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-class ComponentInstance extends React.Component{
+class Home extends React.Component{
   
   render(){
     return(
@@ -9,4 +9,4 @@ class ComponentInstance extends React.Component{
   }
 }
 
-export default ComponentInstance
+export default Home

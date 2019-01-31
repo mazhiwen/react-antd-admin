@@ -6,36 +6,32 @@ import localForage from './localForage';
 import {logOutOperate} from './logout';
 
 const axiosInstance=axios.create({
-    baseURL:'http://localhost:3000'
-
+  baseURL:'http://localhost:3000',
+  // validateStatus: function (status) {
+  //   return status > 666; 
+  // },
+  
 });
 const { prefix, iamPrefix,configPrefix } = API[process.env.API_ENV];
 function isHttpUrl(input) {
   return /^https?:\/\//.test(input);
 }
 function isIamUrl(input) {
-  return /^(sso|iam|iam-.*|welab-authority)\//.test(input);
+  return /^(sso|iam|iam-.*|companyXXX-authority)\//.test(input);
 }
 function isConfigUrl(input) {
-  return /^(welab-rulengine)\//.test(input);
+  return /^(companyXXX-rulengine)\//.test(input);
 }
 async function request(config) {
-  // be sure each request use latest authToken && authMobile
   
   config.headers[authToken]=await localForage.getItem(authToken);
-  // config.headers[authMobile]=await localForage.getItem(authMobile);
-  // config.headers[xMerchantId]=await localForage.getItem(xMerchantId);
-  // config.headers[XPARTNERCODE]=await localForage.getItem(XPARTNERCODE);
+
   
   const input = config.url;
-  // absolute remote url
   if (isHttpUrl(input)) config.url = input;
 
-  // iam server
   else if (isIamUrl(input)) config.url = `${iamPrefix}${input}`;
   
-  // else if (isConfigUrl(input)) config.url = `${configPrefix}${input}`;
-  // current server
   else config.url = `${prefix}${input}`;
   return config;
 }
@@ -51,9 +47,17 @@ function isPlainRequest(input) {
   return /\.(html?|xml|txt)$/.test(input);
 }
 function response(response) {
+  if(response.data.code!=0){
+    showResponseError('统一权限系统:'+response.data.message); 
+    if(response.data.code=='10042'){
+      logOutOperate();    
+    }
+    return false;
+  }
   return isPlainRequest(response.config.url) || useOrigin(response)
     ? response
     : response.data;
+  
 }
 function responseError(error) {
   let rejection;
@@ -63,6 +67,7 @@ function responseError(error) {
     const unfeedback = data.message || data.error;
     const errorMessage = getResponseError(data.status, unfeedback);
     showResponseError(errorMessage);
+    
     if(error.response.status=='401'){
       logOutOperate();    
     }
@@ -83,8 +88,8 @@ function getResponseError(input, unfeedback) {
 }
 function showResponseError (msg,duration) {
   notification['error']({
-    message:msg,
-    description:''
+    message:'操作失败',
+    description:msg
   });
 }
 

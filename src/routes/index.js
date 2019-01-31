@@ -5,6 +5,9 @@ import Login from 'views/login';
 import ApplyDetail from 'views/applydetail'; 
 import query from 'views/system/query'; 
 import myorders from 'views/system/myorders'; 
+import OrderDetails from 'views/system/orderdetails';
+import BlacklistList from 'views/blacklist/list';
+import BlacklistAdd from 'views/blacklist/add';
 export default {
   login:{
     auth:false,
@@ -43,6 +46,28 @@ export default {
       myorders:{
         path:'/system/myorders',
         component:myorders
+      },
+      orderdetails:{
+        path:'/system/orderdetails/:id',
+        component:OrderDetails
+      }
+    }
+  },
+  blacklist:{
+    auth:true,
+    base:'/blacklist',
+    path:'/blacklist',
+    // component:community,
+    children:{
+      list:{
+        auth:true,
+        path:'/blacklist/list',
+        component:BlacklistList
+      },
+      add:{
+        auth:true,
+        path:'/blacklist/add',
+        component:BlacklistAdd
       }
     }
   },
