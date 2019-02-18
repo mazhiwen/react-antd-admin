@@ -1,13 +1,13 @@
 {
-  "name": "h5-judex",
-  "companyXXX": {
-    "contextPath": "companyXXXantifraud"
+  "name": "h5-Domain-anti-fraud",
+  "Domain": {
+    "contextPath": "Domain-anti-fraud"
   },
   "version": "0.1.0",
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "@companyXXX/companyXXX-utilities": "^1.0.13",
+    "utility-mar": "^1.0.6",
     "antd": "^3.13.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",

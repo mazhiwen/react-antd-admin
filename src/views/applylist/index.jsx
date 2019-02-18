@@ -92,7 +92,7 @@ class ComponentInstance extends React.Component{
     });
   }
   getList=(values)=>{
-    axios.get('applications',{
+    axios.get('v1/application/list',{
       params:{
         approvalType:'all',
         size:pageSize,

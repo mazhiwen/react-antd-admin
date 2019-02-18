@@ -2,8 +2,8 @@
 // console.log(packageJson);
 const packageJson=require('../../package.json');
 const data= {
-  // base: 'companyXXXantifraud',
-  base: packageJson.companyXXX.contextPath,
-  appName: 'XXX贷反欺诈系统',
+  // base: 'Domainantifraud',
+  base: packageJson.Domain.contextPath,
+  appName: 'DOMAIN反欺诈系统',
 }
 module.exports.default = module.exports = data

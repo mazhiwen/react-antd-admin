@@ -3,7 +3,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## 启动
 ```sh
 yarn start
-nrm use wldnpm
 export NODE_ENV=integration
 ```
 
@@ -47,31 +46,16 @@ export NODE_ENV=integration
 
 ## 新建项目配置
 
-./package.json companyXXX.contextPath 和 ./src/configs/project.js的base 值需要是一样的项目名称
+
+* 访问地址:host/contextPath/route  
+修改./package.json Domain.contextPath 
+
+* 访问地址:host/route
 
 
 
-## 访问地址 
-
-测试fat https://partners-fat.companyXXX.com/judex/login?partnerCode=FOXCONN
-
-旧系统 生产访问:  
-https://bdl.companyXXX.com/anti-fraud/login
-17665255022 123456
-
-##配置统一权限
-
-
- https://admin-dev.companyXXX.com/authority/login
- 
- 13410429040	abc123456
-17665255022 123456
-## 接口api
-
-http://10.2.14.6:8080/companyXXX-anti-fraud/swagger/swagger-ui.html#!/allot45controller/applicationListUsingGET
-
-
-http://10.2.18.2:8080/companyXXX-anti-fraud/swagger/swagger-ui.html#/
 
 
 
+## 全部校验 分情况校验
+当需要全部校验，并且分情况校验时，用validator 和 动态设置this.flag一起校验

@@ -6,7 +6,7 @@ import packageJsonObj from '../../package.json';
 
 const configs = {
   ...project,
-  contextPath:packageJsonObj.companyXXX.contextPath,
+  contextPath:packageJsonObj.Domain.contextPath,
   name:'name',
   ...blackTypeTreeData,
   authToken: 'x-user-token',
@@ -19,42 +19,54 @@ const configs = {
   XPARTNERCODE: 'X-PARTNER-CODE',
   partnerCode: 'partnerCode',
   expires: 1, // day
-  domain: '.companyXXX.com',
+  domain: '.DOMAIN.com',
   userEmail:'userEmail',
   // 分支和环境名称一致
   API: {
     'master': {
-      iamPrefix: 'https://saas-dev.companyXXX.com/',
-      prefix: 'https://japi-dev.companyXXX.com/companyXXX-anti-fraud/'
+      iamPrefix: 'https://saas-dev.DOMAIN.com/',
+      prefix: 'https://japi-dev.DOMAIN.com/Domain-anti-fraud/api/'
     },
     'integration': {
-      iamPrefix: 'https://saas-fat.companyXXX.com/',
-      prefix: 'https://japi-fat.companyXXX.com/companyXXX-anti-fraud/',
+      iamPrefix: 'https://saas-fat.DOMAIN.com/',
+      prefix: 'https://japi-fat.DOMAIN.com/Domain-anti-fraud/',
     },
     'pre-production': {
-      iamPrefix: 'https://saas-uat.companyXXX.com/',
-      prefix: 'https://japi-uat.companyXXX.com/judex/api/'
+      iamPrefix: 'https://saas-uat.DOMAIN.com/',
+      prefix: 'https://japi-uat.DOMAIN.com/judex/api/'
     },
     'production': {
-      iamPrefix: 'https://saas.companyXXX.com/',
-      prefix: 'https://channels.companyXXX.com/judex/api/',
+      iamPrefix: 'https://saas.DOMAIN.com/',
+      prefix: 'https://channels.DOMAIN.com/judex/api/',
     }
   },
   // basename: {
   //   'master': {
-  //     prefix: 'https://m-dev.companyXXX.com/judex/api/'
+  //     prefix: 'https://m-dev.DOMAIN.com/judex/api/'
   //   },
   //   'integration': {
-  //     prefix: 'https://m-fat.companyXXX.com/judex/api/'
+  //     prefix: 'https://m-fat.DOMAIN.com/judex/api/'
   //   },
   //   'pre-production': {
-  //     prefix: 'https://japi-uat.companyXXX.com/judex/api/'
+  //     prefix: 'https://japi-uat.DOMAIN.com/judex/api/'
   //   },
   //   'production': {
-  //     prefix: 'https://channels.companyXXX.com/judex/api/',
+  //     prefix: 'https://channels.DOMAIN.com/judex/api/',
   //   }
   // },
   stateList,
+  ProcessStatus:{
+    undo:'未调查',
+    doing:'进行中',
+    done:'处理完成'
+  },
+  ResultStatus:{
+    undo:'未调查',
+    'no-risk':'清白',
+    'high-risk':'高风险',
+    'doubtful':'可疑',
+    'cheat':'欺诈'
+  },
   relationshipList: {
     parents:{
       "id": 1,

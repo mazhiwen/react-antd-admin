@@ -101,7 +101,7 @@ class VerifyOperationOrigin extends React.Component{
           operation==='accept'&&<Card className="operation_top">
             <span>产品: {applyData.productName}</span>
             <span>批核流程: {applyData.approvalNote}</span>
-            <span>产品额度上限: {applyData.companyXXXProduct&&applyData.companyXXXProduct.maxAmount}</span>
+            <span>产品额度上限: {applyData.DomainProduct&&applyData.DomainProduct.maxAmount}</span>
           </Card>
         }
         <Form 

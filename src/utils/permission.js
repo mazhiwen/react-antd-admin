@@ -23,7 +23,7 @@ function arrayToObject(array=[],keyName,valueName) {
 export function getPermission (systemCode,type) {
   return new Promise(function(resolve, reject){
     axios
-    .get(`companyXXX-authority/v1/system-code/${systemCode}/owner-resources`,{params:{type}})
+    .get(`Domain-authority/v1/system-code/${systemCode}/owner-resources`,{params:{type}})
     .then((res) => {
       if(res){
         let views = [], menus = [], routes = [];

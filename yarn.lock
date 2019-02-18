@@ -28,10 +28,6 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@companyXXX/companyXXX-utilities@^1.0.13":
-  version "1.0.13"
-  resolved "http://npm.companyXXX.com:8080/@companyXXX%2fcompanyXXX-utilities/-/companyXXX-utilities-1.0.13.tgz#083e774f601c39982219523e7371d5226ef8c2a0"
-
 abab@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -7906,6 +7902,10 @@ utila@~0.3:
 utila@~0.4:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/utila/-/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
+
+utility-mar@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/utility-mar/-/utility-mar-1.0.6.tgz#202754a5efa85d818ef3dac4b43cbc9629b4c84f"
 
 utils-merge@1.0.1:
   version "1.0.1"

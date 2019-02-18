@@ -5,9 +5,9 @@ import {
 } from 'antd';
 import { Link } from 'react-router-dom'
 
-import {axios,utiDate,commonRequest} from 'utils';
+import {axios,dataFormat,commonRequest} from 'utils';
 import routes from 'routes';
-import {stateList} from 'configs';
+import {ProcessStatus,ResultStatus} from 'configs';
 
 import moment from 'moment';
 
@@ -23,58 +23,53 @@ class Query extends React.Component{
       total:0,
       provinceList:[],
       productList:[],
-      processStatusList:[
-        {id: 4,name: '全部'},
-        {id: 0,name: ' 待处理'},
-        {id: 1,name: ' 处理中'},
-        {id: 2,name: '已处理'}
-      ],
       receiveList:[
         {
-          id: 0,
-          name: '全部'
-        },
-        {
-          id: 1,
+          id: 'yes',
           name: '是'
         },
         {
-          id: 2,
+          id: 'no',
           name: '否'
         },
       ],
       columns:[
         {
           title: '贷款号',
-          dataIndex: 'apply_id',
+          dataIndex: 'applicationId',
         },
         {
           title: '产品',
-          dataIndex: 'apply_product',
+          dataIndex: 'productName',
         },
         {
           title: '姓名',
-          dataIndex: 'apply_name',
+          dataIndex: 'name',
         }, 
         {
           title: '身份证号',
-          dataIndex: 'apply_cnid',
+          dataIndex: 'cnid',
         },
         {
           title: '触发时间',
-          dataIndex: 'time'
+          dataIndex: 'createAt',
+          render:value=><span>
+            {moment(value).format("YYYY-MM-DD HH:mm:ss")}
+          </span>
         },
         {
           title: '处理人',
-          dataIndex: 'process_name',
+          dataIndex: 'processName',
         }, 
         {
           title: '处理状态',
-          dataIndex: 'processStatusName',
+          dataIndex: 'processStatus',
+          render:value=><span>{ProcessStatus[value]}</span>
         },
         {
           title: '调查结果',
-          dataIndex: 'resultStatusName'
+          dataIndex: 'resultStatus',
+          render:value=><span>{ResultStatus[value]}</span>
         },  
         // {
         //   title: '状态',
@@ -83,14 +78,22 @@ class Query extends React.Component{
         // }, 
         {
           title: '操作',
-          dataIndex: 'action',
-          render:value=>{
-            if(value.receiveStatus){
-              return (
-                <Button onClick={this.receive(value.index)}>领取</Button>
-              )
-            } else {
+          dataIndex: 'serialNo',
+          key:'ifprocessName',
+          render:(text,record)=>{
+            console.log(record);
+            if(record.processName){
               return;
+            } else {
+              
+              return (
+                <Button 
+                  size="small" type="primary"
+                  onClick={this.getApplication.bind(this,text)}
+                >
+                  领取
+                </Button>
+              )
             }
           }
         }, 
@@ -99,39 +102,66 @@ class Query extends React.Component{
     };
     this.getListSearchParams={};
   }
+  getApplication=(serialNo)=>{
+    axios.post(`v1/allot/application/get`,{
+      applyTask:{
+        serialNo
+      }
+    })
+      .then(res=> {
+        
+      })
+      .finally(()=>{
+
+      })
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        
         let params={...values};
+        dataFormat.deleteEmpty(params);
+        if(params.processStatus==='all'){
+          delete params.processStatus;
+        }
+        if(params.province==='all'){
+          delete params.province;
+        }
+        
+        if(params.isAllot==='all'){
+          delete params.isAllot;
+        }
+        if(params.productCode){
+          params.productCode=params.productCode.join();
+        }
         if(params.times){
           let times=params.times;
-          params.startDate=moment(times[0]).format("YYYY-MM-DD");
-          params.startDate=moment(times[1]).format("YYYY-MM-DD");
+          delete params.times;
+          params.triggerStart=moment(times[0]).format("YYYY-MM-DD");
+          params.triggerEnd=moment(times[1]).format("YYYY-MM-DD");
         }
-        this.getListSearchParams=values;
+        this.getListSearchParams=params;
         this.getList(params);
       }
     });
   }
   getList=(pageParams)=>{
-    axios.get('applications',{
+    axios.get('v1/application/list',{
       params:{
-        approvalType:'all',
         size:pageSize,
-        start:1,
+        page:1,
         ...this.getListSearchParams,
         ...pageParams
       }
     })
       .then(res=> {
-        let data=res.data;
-        let dataContent=data.content;
-        dataContent.forEach((value,index)=>{
+        let data=res.result;
+        data.forEach((value,index)=>{
           value.key=index+1;
         })
         this.setState({
-          data:dataContent,
+          data:data,
           total:data.totalElements
         });
       })
@@ -171,7 +201,7 @@ class Query extends React.Component{
     const {
       getFieldDecorator, getFieldsError
     } = this.props.form;
-    const {columns,data,total,productList,processStatusList,
+    const {columns,data,total,productList,
       receiveList,provinceList
     }=this.state;
     const rowSelection = {
@@ -226,7 +256,7 @@ class Query extends React.Component{
             </Col>
             <Col span={4}>  
               <Form.Item label="渠道号">
-                {getFieldDecorator('applyChannel')(
+                {getFieldDecorator('origin')(
                   <Input/>
                 )}
               </Form.Item>
@@ -234,8 +264,9 @@ class Query extends React.Component{
             <Col span={4}>
               <Form.Item label="产品" 
               >
-                {getFieldDecorator('applyProduct')(
+                {getFieldDecorator('productCode')(
                   <Select
+                    allowClear={true}
                     mode="multiple"
                   >
                     {productList.map((value,index)=>
@@ -248,11 +279,14 @@ class Query extends React.Component{
             <Col span={4}>
               <Form.Item label="处理状态" 
               >
-                {getFieldDecorator('processStatus')(
+                {getFieldDecorator('processStatus',{
+                  initialValue:'all'
+                })(
                   <Select
                   > 
-                    {processStatusList.map((value,index)=>
-                      <Select.Option key={index} value={value.id}>{value.name}</Select.Option>
+                    <Select.Option value='all'>全部</Select.Option>
+                    {Object.entries(ProcessStatus).map(([index,value])=>
+                      <Select.Option key={index} value={index}>{value}</Select.Option>
                     )}
                   </Select>
                 )}
@@ -261,9 +295,12 @@ class Query extends React.Component{
             <Col span={4}>
               <Form.Item label="是否已领取" 
               >
-                {getFieldDecorator('isGet')(
+                {getFieldDecorator('isAllot',{
+                  initialValue:'all'
+                })(
                   <Select
                   > 
+                    <Select.Option value='all'>全部</Select.Option>
                     {receiveList.map((value,index)=>
                       <Select.Option key={index} value={value.id}>{value.name}</Select.Option>
                     )}
@@ -274,7 +311,9 @@ class Query extends React.Component{
             <Col span={4}>
               <Form.Item label="省份" 
               >
-                {getFieldDecorator('applyProvinceCode')(
+                {getFieldDecorator('province',{
+                  initialValue:'all'
+                })(
                   <Select
                   > 
                     {provinceList.map((value,index)=>
@@ -314,7 +353,7 @@ class Query extends React.Component{
             total:total,
             pageSize:pageSize,
             onChange:(page, pageSize)=>this.getList({
-              start:page
+              page:page
             })
           }}
           bordered size="small"

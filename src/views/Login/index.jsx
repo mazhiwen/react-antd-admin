@@ -32,7 +32,7 @@ class ComponentInstance extends React.Component {
     // this.historyPush( routes.home.path);
     this.props["form"].validateFields((err, values) => {
       if (!err) {
-        axios.post('companyXXX-authority/v1/user-login', {...this.params,...values}, { useOrigin: true })
+        axios.post('Domain-authority/v1/user-login', {...this.params,...values}, { useOrigin: true })
           .then((res) => {
             
             const { data: { code = '', message = '' }, headers } = res;
@@ -112,7 +112,7 @@ class ComponentInstance extends React.Component {
       if(errors&&errors.loginName){
         
       }else{
-        axios.post('companyXXX-authority/v1/send-mobile-code', {
+        axios.post('Domain-authority/v1/send-mobile-code', {
           mobile: this.props["form"].getFieldValue('loginName'),
           type: '01',
         })

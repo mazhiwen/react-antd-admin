@@ -1,7 +1,7 @@
 import {axios} from './axios';
 
 import localForage from './localForage';
-import {dataFormat,utiDate,validator as validatorOrigin} from '@companyXXX/companyXXX-utilities';
+import {dataFormat,utiDate,validator as validatorOrigin} from 'utility-mar';
 import md5 from 'md5';
 import commonRequest from './commonRequest';
 

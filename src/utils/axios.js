@@ -17,10 +17,10 @@ function isHttpUrl(input) {
   return /^https?:\/\//.test(input);
 }
 function isIamUrl(input) {
-  return /^(sso|iam|iam-.*|companyXXX-authority)\//.test(input);
+  return /^(sso|iam|iam-.*|Domain-authority)\//.test(input);
 }
 function isConfigUrl(input) {
-  return /^(companyXXX-rulengine)\//.test(input);
+  return /^(Domain-rulengine)\//.test(input);
 }
 async function request(config) {
   

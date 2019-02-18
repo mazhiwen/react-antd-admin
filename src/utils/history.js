@@ -4,7 +4,7 @@ import { createBrowserHistory } from 'history'
 import {contextPath} from 'configs';
 export default createBrowserHistory({
   // basename:project.base+'/'
-  // basename:packageJsonObj.companyXXX.contextPath+'/'
+  // basename:packageJsonObj.Domain.contextPath+'/'
   basename:contextPath
   /* pass a configuration object here if needed */
 })
