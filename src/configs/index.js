@@ -3,14 +3,19 @@ import stateList from './stateList';
 import project from './project'; 
 import * as blackTypeTreeData  from './blackTypeTreeData'; 
 import packageJsonObj from '../../package.json';
+import extraStyle from './extraStyle';
+
 
 const configs = {
   ...project,
-  contextPath:packageJsonObj.Domain.contextPath,
+  ...extraStyle,
+  contextPath:packageJsonObj.company.contextPath,
   name:'name',
   ...blackTypeTreeData,
   authToken: 'x-user-token',
+  viewsMapName:'viewsMapName',
   authMobile: 'x-user-mobile',
+  phone:'phone',
   xMerchantId: 'x-merchant-id',
   checkItemInfo: 'checkItemInfo',
   userPassword: 'userPassword',
@@ -19,42 +24,108 @@ const configs = {
   XPARTNERCODE: 'X-PARTNER-CODE',
   partnerCode: 'partnerCode',
   expires: 1, // day
-  domain: '.DOMAIN.com',
+  domain: '.company.com',
   userEmail:'userEmail',
   // 分支和环境名称一致
   API: {
     'master': {
-      iamPrefix: 'https://saas-dev.DOMAIN.com/',
-      prefix: 'https://japi-dev.DOMAIN.com/Domain-anti-fraud/api/'
+      iamPrefix: 'https://saas-dev.company.com/',
+      prefix: 'https://japi-dev.company.com/company-anti-fraud/api/'
     },
     'integration': {
-      iamPrefix: 'https://saas-fat.DOMAIN.com/',
-      prefix: 'https://japi-fat.DOMAIN.com/Domain-anti-fraud/',
+      iamPrefix: 'https://saas-fat.company.com/',
+      prefix: 'https://japi-fat.company.com/company-anti-fraud/api/',
     },
     'pre-production': {
-      iamPrefix: 'https://saas-uat.DOMAIN.com/',
-      prefix: 'https://japi-uat.DOMAIN.com/judex/api/'
+      iamPrefix: 'https://saas-uat.company.com/',
+      prefix: 'https://japi-uat.company.com/judex/api/'
     },
     'production': {
-      iamPrefix: 'https://saas.DOMAIN.com/',
-      prefix: 'https://channels.DOMAIN.com/judex/api/',
+      iamPrefix: 'https://saas.company.com/',
+      prefix: 'https://channels.company.com/judex/api/',
     }
+  },
+  LinkAPI:{
+    'integration': {
+      '/graph/applicationgraph': 'http://172.20.211.252:9000/graph',
+      '/rule/config': 'http://172.20.211.252:9000/customFieldList',
+      '/rule/configs': 'https://xrule-fat.company.com/#!/app/ruleFiledAdd?',
+      '/rule/test': 'http://172.20.211.252:9000/ruleTestList',
+    },
+    'production': {
+      '/graph/applicationgraph': 'http://172.20.211.252:9000/graph',
+      '/rule/config': 'http://172.20.211.252:9000/customFieldList',
+      '/rule/configs': 'http://xrule.company.com/#!/app/ruleFiledAdd?',
+      '/rule/test': 'http://172.20.211.252:9000/ruleTestList',
+    }
+  },
+  Domains:{
+    
   },
   // basename: {
   //   'master': {
-  //     prefix: 'https://m-dev.DOMAIN.com/judex/api/'
+  //     prefix: 'https://m-dev.company.com/judex/api/'
   //   },
   //   'integration': {
-  //     prefix: 'https://m-fat.DOMAIN.com/judex/api/'
+  //     prefix: 'https://m-fat.company.com/judex/api/'
   //   },
   //   'pre-production': {
-  //     prefix: 'https://japi-uat.DOMAIN.com/judex/api/'
+  //     prefix: 'https://japi-uat.company.com/judex/api/'
   //   },
   //   'production': {
-  //     prefix: 'https://channels.DOMAIN.com/judex/api/',
+  //     prefix: 'https://channels.company.com/judex/api/',
   //   }
   // },
+  isAddBlackMap:{
+    self:'本人',
+    contact:'联系人',
+    agent:'代办人',
+    companytel:'单位固定电话',
+    companyname:'单位名称'
+  },
+
+  belongMap:{
+    approve:'审批',
+    anti:'反欺诈'
+  },
   stateList,
+  approvalStatusWedefendMap:{
+    normal:'普通',
+    experiment_pbcredit:'人行征信测试一期',
+    'semi-auto':'半自动',
+    manual:'人工处理',
+    'semi-auto-final':'半自动审批完成',
+    experiment_gjj:'公积金测试一期',
+    experiment_kaniu:'卡牛测试一期',
+    experiment_ylzh:'银联智慧一期',
+    experiment_shd:'商户贷类型',
+    experiment_gjjupgrade:'公积金用户升级',
+    antifraud:'反欺诈',
+    experiment_syd_pos:'自营生意贷POS',
+    experiment_syd_taobao:'自营生意贷电商'
+  },
+  subTypeMap:{
+    system:'系统进件',
+    review:'人工提报'
+  },
+  qualityProcessStatusMap:{
+    undo:'待质检',
+    doing:'质检中',
+    done:'已质检',
+  },
+  qualityResultStatusMap:{
+    wrong:'差错',
+    right:'无差错',
+  },
+  urgentMap:{
+    yes:'是',
+    no:'否'
+  },
+  resultDecisionMap:{
+    'no-risk':'清白',
+    'high-risk':'高风险',
+    cheat:'欺诈'
+  },
   ProcessStatus:{
     undo:'未调查',
     doing:'进行中',
@@ -67,47 +138,26 @@ const configs = {
     'doubtful':'可疑',
     'cheat':'欺诈'
   },
+  phoneRecordStatus:{
+    '1': '接通',
+    '2': '无人接听',
+    '3': '空号',
+    '4': '停机'
+  },
   relationshipList: {
-    parents:{
-      "id": 1,
-      "name": "parents",
-      "description": "父母"
-    }, 
-    spouse:{
-      "id": 2,
-      "name": "spouse",
-      "description": "配偶"
-    }, 
-    sibling:{
-      "id": 3,
-      "name": "sibling",
-      "description": "兄弟姐妹"
-    }, 
-    teacher:{
-      "id": 4,
-      "name": "teacher",
-      "description": "老师"
-    }, 
-    classmate:{
-      "id": 5,
-      "name": "classmate",
-      "description": "同学"
-    }, 
-    friend:{
-      "id": 6,
-      "name": "friend",
-      "description": "朋友"
-    }, 
-    colleague:{
-      "id": 7,
-      "name": "colleague",
-      "description": "同事"
-    }, 
-    children:{
-      "id": 8,
-      "name": "children",
-      "description": "子女"
-    }
+    parents:"父母",
+    spouse:"配偶", 
+    sibling:"兄弟姐妹",
+    teacher:"老师",
+    classmate:"同学",
+    friend:"朋友",
+    colleague:"同事",
+    children:"子女"
+  },
+  resultDecisionList:{
+    'no-risk':'清白',
+    'high-risk':'高风险',
+    'cheat':'欺诈'
   },
   roleList: {
     "": "全部",
@@ -116,33 +166,17 @@ const configs = {
     "APPROVAL_FRAUD": "反欺诈",
     "APPROVAL_FINAL": "终审"
   },
-  "wedefendDecisionList": [
-    {
-      "code": "accept",
-      "name": "通过"
-    }, {
-      "code": "reject",
-      "name": "拒绝"
-    }, {
-      "code": "return",
-      "name": "退回"
-    }, {
-      "code": "review",
-      "name": "转人工"
-    }, {
-      "code": "freeze",
-      "name": "冻结"
-    }, {
-      "code": "rejected",
-      "name": "拒绝"
-    }, {
-      "code": "cancelled",
-      "name": "取消"
-    }, {
-      "code": "push_backed",
-      "name": "退回"
-    }
-  ],
+  "wedefendDecisionList": {
+    "accept": "通过",
+    "reject":"拒绝",
+    "return": "退回",
+    "review": "转人工",
+    "freeze": "冻结",
+    "rejected": "拒绝",
+    "cancelled": "取消",
+    "push_backed": "退回"
+    
+  },
   "marriageList": [
     {
       "id": 1,

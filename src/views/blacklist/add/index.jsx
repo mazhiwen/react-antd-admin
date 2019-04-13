@@ -6,7 +6,6 @@ import {
 import { Link } from 'react-router-dom'
 
 import {axios,utiDate,commonRequest,localForage} from 'utils';
-import routes from 'routes';
 import {
   blacklistTypeValueMap,userEmail,blackTypeTreeData,
   crimeCategoryToText,crimeCategoryToParams,
@@ -134,11 +133,14 @@ class extends React.Component{
   }
 }
 )
-class Add extends React.Component{
+
+
+export default Form.create()(class extends React.Component{
   
   constructor(props){
     super(props);
     this.state={
+      searchValue:'',
       isShowModal:false,
       applicationId:'',
       paramsBasic:{
@@ -216,46 +218,52 @@ class Add extends React.Component{
       // this.$Message.info('查询条件不能为空！');
       return false;
     }
-    axios.get('v1/blacklist/application/info',{
-      params:{
-        applicationId
-      }
-    })
-    .then(res=>{
-      let result = res.result;
-      // //联系人
-      // if(data.liaisons.length>0){
-      //   this.contacts = [];
-      //   data.liaisons.forEach(element => {
-      //     this.contacts.push({
-      //       name: element.name,
-      //       phone: element.mobile,
-      //       relationship: element.relationship ? element.relationship : '',
-      //       relationshipName: this.getRelationshipName(this.relationList, element.relationship)
-      //     });
-      //   });
-      // }
-      //公司信息
-      this.props.form.setFieldsValue({
-        name:result.profile.name,
-        mobile:{
-          value:result.user.mobile
-        },
-        cnid:{
-          value:result.profile.cnid
-        },
-        companyname:{
-          value:result.company.name
-        },
-        companytelephone:{
-          value:result.company.telephone
-        },
+    // axios.get('v1/blacklist/application/info',{
+    //   params:{
+    //     applicationId
+    //   }
+    // })
+    commonRequest.getWedefendReportDetails(applicationId)
+      .then(res=>{
+        let result = res;
         
-      });
-      this.setState({
-        liaisons:result.liaisons
+        // //联系人
+        // if(data.liaisons.length>0){
+        //   this.contacts = [];
+        //   data.liaisons.forEach(element => {
+        //     this.contacts.push({
+        //       name: element.name,
+        //       phone: element.mobile,
+        //       relationship: element.relationship ? element.relationship : '',
+        //       relationshipName: this.getRelationshipName(this.relationList, element.relationship)
+        //     });
+        //   });
+        // }
+        
+        
+        //公司信息
+        this.props.form.setFieldsValue({
+          name:result.proposer.name,
+          mobile:{
+            value:result.proposer.mobile
+          },
+          cnid:{
+            value:result.proposer.cnid
+          },
+          companyname:{
+            value:result.company.name
+          },
+          companytelephone:{
+            value:result.company.telphone
+          },
+          
+        });
+
+
+        this.setState({
+          liaisons:result.liaisons
+        })
       })
-    })
     
   }
   setModal=(state)=>{
@@ -263,8 +271,17 @@ class Add extends React.Component{
       isShowModal:state
     });
   }
-
+  onChangeSearch = (e) => {
+    this.setState({ searchValue: e.target.value });
+  }
   componentDidMount(){
+    let searchValue=this.props.match.params.id;
+    if(searchValue){
+      this.setState({
+        searchValue
+      })
+      this.search(searchValue);
+    }
     localForage.getItem(userEmail)
       .then((userEmail)=>{
         this.setState({
@@ -275,11 +292,12 @@ class Add extends React.Component{
   // CA18110814371708272900334
   render(){
     const {
-      isShowModal,liaisons,addConfirmModalData
+      isShowModal,liaisons,addConfirmModalData,searchValue
     }=this.state;
     const {
       getFieldDecorator, getFieldsError
     } = this.props.form;
+
     const blackTypeSelector=(
       <TreeSelect
         showSearch
@@ -288,7 +306,6 @@ class Add extends React.Component{
         allowClear
         multiple
         treeData={blackTypeTreeData}
-        onChange={this.onChange}
       />
         
     );
@@ -340,7 +357,7 @@ class Add extends React.Component{
                   <Select 
                   >
                     {Object.entries(relationshipList).map(([indexr,valuer])=>(
-                      <Option key={indexr} value={indexr}>{valuer.description}</Option>
+                      <Option key={indexr} value={indexr}>{valuer}</Option>
                     ))
                     }
                   </Select>
@@ -406,10 +423,11 @@ class Add extends React.Component{
         <div>
           <FormItem>            
             <Input.Search
-              placeholder="CA19012416050633742799591"
+              placeholder="输入贷款号"
               enterButton="查找贷款号"
-              value="CA19012416050633742799591"
+              value={searchValue}
               style={{width:400}}
+              onChange={this.onChangeSearch}
               onSearch={this.search}
             />
           </FormItem>
@@ -685,5 +703,5 @@ class Add extends React.Component{
     )
   }
 }
+)
 
-export default Form.create()(Add)

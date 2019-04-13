@@ -4,6 +4,7 @@ const paths = require('./paths');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const webpack = require('webpack');
+
 module.exports = {
   module: {
     strictExportPresence: true,
@@ -29,6 +30,23 @@ module.exports = {
         ],
         include: paths.appSrc,
       },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+          {
+            loader: '@svgr/webpack',
+            options: {
+              babel: false,
+              icon: true,
+            },
+          },
+        ],
+        // test: /\.svg$/,
+        // use: '@svgr/webpack',
+      }
     ]           
   },
   plugins: [
@@ -58,7 +76,7 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
-      // 'images':path.resolve(__dirname, '../src/images'),
+      'images':path.resolve(__dirname, '../src/images'),
       // 'routes':path.resolve(__dirname, '../src/routes'),
       'components':path.resolve(__dirname, '../src/components'),
       'utils':path.resolve(__dirname, '../src/utils'),

@@ -1,12 +1,17 @@
 import * as React from 'react';
 import {Menu,Icon} from 'antd';
 import { Link ,withRouter,NavLink} from 'react-router-dom'
-import routes from 'routes';
+import {routesMap} from 'routes';
 import {axios,localForage,permission,history} from 'utils';
+import {
+  viewsMapName
+} from 'configs';
+import {  connect } from 'react-redux';
 
 const { SubMenu } = Menu;
 
  
+export default withRouter(connect()(
 class ComponentInstance extends React.Component{
   constructor(props){
     super(props);
@@ -17,7 +22,7 @@ class ComponentInstance extends React.Component{
       nestedMenus : [
         {
           label:'全部',
-          url:routes.home.path,
+          url:routesMap.home.path,
           id:'home'
           
         },
@@ -26,7 +31,7 @@ class ComponentInstance extends React.Component{
           children:[
             {
               id:'games',
-              url:`${routes.applylist.base}/all`,
+              url:`${routesMap.applylist.base}/all`,
               label:'富士康'
             }
           ],
@@ -42,33 +47,45 @@ class ComponentInstance extends React.Component{
   }
   
   componentDidMount(){
+    
+    
     permission.getPermission('anti-fraud','view,menu,route')
       .then((value)=>{
-        console.log(value);
-        const {nestedMenus,menuMap} =value;
+        const {nestedMenus,menuMap,viewsList} =value;
         this.setState({
           nestedMenus,
           menuMap
         })
-        // url -> 子菜单 父菜单
-        //根据location /aaa/b aaa值作为激活导航栏item
-        function urlToMenu(url){
+        console.log(viewsList);
+        this.props.dispatch({
+          type: 'SET_ViewsList',
+          value:viewsList
+        })
+        // localForage.setItem('viewsList',viewsList);
+        const getSelectMenu=(url)=>{
+
+          let selectMenuData=menuMap[url];
           let match = url.match(/(\/[^\/]*){1}/g);
-          if(match.length>=2){
-            return `${match[0]}${match[1]}`;
-          }else{
-            return `${match[0]}`;
-          }
+          let matchLength=match.length;
+          if(selectMenuData){
+            if(matchLength>=2){
+              selectMenuData.parent=[];
+              while(matchLength>1){
+
+                selectMenuData.parent.push(menuMap[match.slice(0,matchLength-1).join('')]['id']);
+                matchLength--;
+              }
+            }
+          } 
           
+          return selectMenuData;
         }
-        function getSelectMenu(url){
-          return menuMap[urlToMenu(url)];
-        }
+
         if(getSelectMenu(this.props.location.pathname)){
           let selectMenuData=getSelectMenu(this.props.location.pathname);
           this.setState({
             selectedKeys:[selectMenuData['id']],
-            openKeys:[selectMenuData['parent']]
+            openKeys:selectMenuData['parent']
           });
         }
         
@@ -88,6 +105,17 @@ class ComponentInstance extends React.Component{
       });
    
 
+  }
+  generateNavLinkTo(url){
+    const arr=url.split('?');
+    let res={
+      pathname:arr[0]
+    };
+    if(arr.length>1){
+      res.search=`?${arr[1]}`;
+    }
+    // 此处会发现渲染两次
+    return res;
   }
   componentWillUnmount(){
     this.setState = (state,callback)=>{
@@ -119,25 +147,60 @@ class ComponentInstance extends React.Component{
                 }
               >
                 {
-                  v.children.map((vSub,indexSub)=>
-                    <Menu.Item key={vSub.id}>
-                      <NavLink 
-                        to={{
-                          pathname:vSub.url
-                        }}
-                        
+                  v.children.map((vSub2,indexSub2)=>
+                    vSub2.children?(
+                      <SubMenu 
+                        key={vSub2.id} 
+                        title={
+                          <span>
+                            <Icon type="setting" />
+                            {/* {v.url?(<Link to={v.url}>{v.label}</Link>):(v.label)} */}
+                            {vSub2.label}
+                          </span>
+                        }
                       >
-                        {vSub.label}
-                      </NavLink>
-                      
-                    </Menu.Item>
+                        {
+                          vSub2.children.map((vSub3,indexSub3)=>
+                              
+                              <Menu.Item key={vSub3.id}>
+                                <NavLink 
+                                  to={this.generateNavLinkTo(vSub3.url)}
+                                >
+                                  {vSub3.label}
+                                </NavLink>
+                              </Menu.Item>
+                          )
+                        }
+                      </SubMenu>
+                    ):(
+                      <Menu.Item key={vSub2.id}>
+                        
+                        <NavLink 
+                          to={{
+                            pathname:vSub2.url
+                          }}
+                        > 
+                          <Icon type="setting" />
+                          {vSub2.label}
+                        </NavLink>
+                        
+                      </Menu.Item>
+                    )
                   )
                 }
               </SubMenu>
             ):(
               <Menu.Item key={v.id}>
-                <Icon type="bars" />
-                <span><Link to={v.url}>{v.label}</Link></span>
+                
+                <NavLink 
+                  to={{
+                    pathname:v.url
+                  }}
+                > 
+                  {/* <Icon type="bars" /> */}
+                  {v.label}
+                </NavLink>
+                
               </Menu.Item>
             )
           )
@@ -147,4 +210,5 @@ class ComponentInstance extends React.Component{
   }
 }
 
-export default withRouter(ComponentInstance)
+)
+)

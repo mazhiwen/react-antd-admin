@@ -4,6 +4,7 @@ import {notification } from 'antd';
 import { authToken, authMobile,xMerchantId,API,XPARTNERCODE} from 'configs';
 import localForage from './localForage';
 import {logOutOperate} from './logout';
+import NProgress from 'nprogress';
 
 const axiosInstance=axios.create({
   baseURL:'http://localhost:3000',
@@ -17,13 +18,13 @@ function isHttpUrl(input) {
   return /^https?:\/\//.test(input);
 }
 function isIamUrl(input) {
-  return /^(sso|iam|iam-.*|Domain-authority)\//.test(input);
+  return /^(sso|iam|iam-.*|company-authority)\//.test(input);
 }
 function isConfigUrl(input) {
-  return /^(Domain-rulengine)\//.test(input);
+  return /^(company-rulengine)\//.test(input);
 }
 async function request(config) {
-  
+  NProgress.start();
   config.headers[authToken]=await localForage.getItem(authToken);
 
   
@@ -47,7 +48,8 @@ function isPlainRequest(input) {
   return /\.(html?|xml|txt)$/.test(input);
 }
 function response(response) {
-  if(response.data.code!=0){
+  NProgress.done();
+  if(response.data.code&&response.data.code!=0){
     showResponseError('统一权限系统:'+response.data.message); 
     if(response.data.code=='10042'){
       logOutOperate();    
@@ -60,6 +62,7 @@ function response(response) {
   
 }
 function responseError(error) {
+  NProgress.done();
   let rejection;
   if(error.response){
     const { data } = error.response;

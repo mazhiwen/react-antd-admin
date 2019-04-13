@@ -6,9 +6,12 @@ import {
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 import {  name,appName} from 'configs';
-import routes from 'routes';
-import {logOutOperate,localForage,md5} from 'utils';
+import {routesMap} from 'routes';
+import {logOutOperate,localForage,historyPush} from 'utils';
 import { axios } from '../../utils/axios';
+import PWDModal from 'components/PWDModal';
+import MissionPickRulesModal from 'components/MissionPickRulesModal';
+import {  connect } from 'react-redux';
 
 // const {  } = Menu;
 const {Header}=Layout;
@@ -22,7 +25,7 @@ const menu1=(
       </a>
     </Menu.Item>
     <Menu.Item>
-      <Link to={{pathname:`${routes.applylist.base}/all`}}>
+      <Link to={{pathname:`${routesMap.applylist.base}/all`}}>
         贷款列表
       </Link>
     </Menu.Item>
@@ -30,100 +33,22 @@ const menu1=(
 );
 
 
-const PWDModal=Form.create()(
-class extends React.Component{
-  setPassword=()=>{
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        axios.post('admin/admin', {
-          oldPassword: md5(values.oldPassword),
-          password: md5(values.newPassword),
-          isUpdate:1
-        })
-        .then((res)=>{
-          notification['success']({
-            message:'密码已更新',
-            description:''
-          });
-        })
-      }
-    })
-    
-  }
-  
-  render(){
-    const {
-      isShowPWDModal, onCancel, form,
-    } = this.props;
-    const { getFieldDecorator,getFieldValue,validateFields} = form;
-    const newPasswordValidator = (rule, value, callback) =>{
-      if (!value) {
-        callback(new Error('请输入新密码'));
-      } else {
-        if (getFieldValue('newPassword') !== '') {
-          validateFields(['newPasswordConfirm']);
-        }
-        callback();
-      }
+
+
+export default withRouter(connect(
+  (state) =>{
+    return{
+      ViewsList:state.ViewsList.data
     }
-    const newPwdconVal = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请再次输入新密码'));
-      } else if (value !== getFieldValue('newPassword')) {
-        callback(new Error('输入内容与新密码不一致!'));
-      } else {
-        callback();
-      }
-    };
-    return(
-      <Modal
-        visible={isShowPWDModal}
-        title="修改密码"
-        okText="确认"
-        onCancel={onCancel}
-        onOk={this.setPassword}
-      >
-        <Form layout="vertical">
-          <FormItem label="密码">
-            {getFieldDecorator('oldPassword', {
-              rules: [{required: true, message: '旧密码不能为空', tragger: 'blur'}],
-            })(
-              <Input/>
-            )}
-          </FormItem>
-          <FormItem label="新密码">
-            {getFieldDecorator('newPassword', {
-              rules: [
-                {required: true, validator: newPasswordValidator, tragger: 'blur'}
-              ]
-            })(
-              <Input/>
-            )}
-          </FormItem>
-          <FormItem label="确认新密码">
-            {getFieldDecorator('newPasswordConfirm', {
-              rules: [
-                {required: true, validator: newPwdconVal, tragger: 'blur'}
-              ]
-            })(
-              <Input/>
-            )}
-          </FormItem>
-        </Form>
-      </Modal>
-    )
   }
-}
-)
-
-
-
+)(
 class ComponentInstance extends React.Component{
   constructor(props){
     super(props);
     this.state={
       account:'',
-      isShowPWDModal:false
+      isShowPWDModal:false,
+      isMissionPickRulesModal:false
     };
   }
   historyPush=(path)=>{
@@ -131,6 +56,11 @@ class ComponentInstance extends React.Component{
   }
   logOut=()=>{
     logOutOperate();
+  }
+  setMissionPickRulesModal=(state)=>{
+    this.setState({
+      isMissionPickRulesModal:state
+    });
   }
   setPWDModal=(state)=>{
     this.setState({
@@ -146,15 +76,34 @@ class ComponentInstance extends React.Component{
     });
   }
   render(){
+    const {
+      ViewsList
+    }=this.props;
     const menu2=(
       <Menu>
-        <Menu.Item>
+        {ViewsList.includes('getpatchrules')&&<Menu.Item>
+          <span 
+            onClick={this.setMissionPickRulesModal.bind(this,true)}
+          >
+            任务取件规则
+          </span>
+        </Menu.Item>}
+        {ViewsList.includes('user')&&<Menu.Item>
+          <span 
+            onClick={historyPush.bind(this,{
+              pathname:"/user",
+            })}
+          >
+            用户管理
+          </span>
+        </Menu.Item>}
+        {ViewsList.includes('setpwd')&&<Menu.Item>
           <span 
             onClick={this.setPWDModal.bind(this,true)}
           >
             修改密码
           </span>
-        </Menu.Item>
+        </Menu.Item>}
         <Menu.Item>
           <span onClick={this.logOut}>
             退出登录
@@ -163,7 +112,7 @@ class ComponentInstance extends React.Component{
       </Menu>
     );
     const {
-      isShowPWDModal
+      isShowPWDModal,isMissionPickRulesModal
     }=this.state;
     return(
       <div>
@@ -202,9 +151,13 @@ class ComponentInstance extends React.Component{
           isShowPWDModal={isShowPWDModal}
           onCancel={this.setPWDModal.bind(this,false)}
         />
+        <MissionPickRulesModal
+          visible={isMissionPickRulesModal}
+          onCancel={this.setMissionPickRulesModal.bind(this,false)}
+        />
       </div>
     )
   }
 }
-
-export default withRouter(ComponentInstance)
+)
+)

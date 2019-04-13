@@ -6,7 +6,7 @@ import {
 import { Link } from 'react-router-dom'
 
 import {axios,utiDate} from 'utils';
-import routes from 'routes';
+import {routesMap} from 'routes';
 import {stateList} from 'configs';
 
 import moment from 'moment';
@@ -38,7 +38,7 @@ class ComponentInstance extends React.Component{
           dataIndex: 'id',
           render:value=><Link 
                           target="_blank" 
-                          to={{pathname:`${routes.applydetail.base}/${value}`}}
+                          to={{pathname:`${routesMap.applydetail.base}/${value}`}}
                         >
                           {value}
                         </Link>

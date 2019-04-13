@@ -4,14 +4,24 @@ import {
   Layout,LocaleProvider
 } from 'antd';
 import './styles/index.less';
+import 'nprogress/nprogress.css';
 import {Route,Switch } from 'react-router-dom'
 import Login from './views/login';
 import MenuList from './components/MenuList/';
 import MainHeader from './components/MainHeader';
-import routes from 'routes';
-import {localForage} from 'utils';
+import {routesMap,routes,routesUrlMap} from 'routes';
+import {localForage,RouteWithSubRoutes} from 'utils';
 import PrivateRoute from './components/PrivateRoute';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import { 
+  authToken,
+} from 'configs';
+
+import {renderRoutes,matchRoutes} from 'react-router-config';
+
+
+
+
 
 const {Sider,Content}=Layout;
 
@@ -19,12 +29,23 @@ const {Sider,Content}=Layout;
 
 
 
-
+// const renderRoute=(routes)=>{
+//   routes.map((value,index)=>{
+//     return (
+//       <PrivateRoute 
+//         auth={value.auth} 
+//         path={value.path} 
+//         component={value.component}
+//       /> 
+//     );
+//   })
+// }
 class App extends Component {
   constructor(props){
     super(props);
     this.state={
-      account:''
+      account:'',
+      isLogin:''
     };
 
     
@@ -36,11 +57,36 @@ class App extends Component {
   }
 
   componentDidMount(){
-    
+    this.auth();
     
   }
-  
+  componentDidUpdate(prevProps) {
+    
+    if (this.props.location !== prevProps.location) {
+      this.onRouteChanged();
+    }
+  }
+  onRouteChanged(route) {
+    this.auth();
+  }
+  auth(){
+    const branch = matchRoutes(routes, this.props.location.pathname);
+    if(branch.length>0&&branch[branch.length-1].route.auth){
+      localForage.getItem(authToken)
+        .then((value)=>{
+          if(!value){
+            this.props.history.replace({pathname: '/login'});
+          }
+          // this.setState({
+          //   isLogin:value
+          // });
+
+        })
+    }
+    
+  }
   render() {
+    const {isLogin} =this.state;
     return (
       <LocaleProvider locale={zh_CN}>
         {this.props["location"]["pathname"]!=='/login'?
@@ -53,12 +99,20 @@ class App extends Component {
             </Sider>
             <Layout className="content_layout" >
               <Content style={{  margin: 0, minHeight: 1000 }}>
-                <Switch>
-                  <PrivateRoute auth={false} 
+               <Switch>
+                   {/*<PrivateRoute auth={false} 
                     path='/' exact
-                    component={routes.home.component}
-                  />        
-                  <PrivateRoute auth={routes.home.auth} 
+                    component={routesMap.home.component}
+                  />
+                  <PrivateRoute auth={routesMap.blacklist.children.list.auth} 
+                    path={routesMap.blacklist.children.list.path} 
+                    component={routesMap.blacklist.children.list.component}
+                  />
+                  <PrivateRoute auth={routesMap.blacklist.children.add.auth} 
+                    path={routesMap.blacklist.children.add.path} 
+                    component={routesMap.blacklist.children.add.component}
+                  />         
+                   <PrivateRoute auth={routes.home.auth} 
                     path={routes.home.path} 
                     component={routes.home.component}
                   />  
@@ -73,24 +127,18 @@ class App extends Component {
                   <PrivateRoute auth={routes.system.children.query.auth} 
                     path={routes.system.children.query.path} 
                     component={routes.system.children.query.component}
-                  />
-                  <PrivateRoute auth={routes.system.children.myorders.auth} 
-                    path={routes.system.children.myorders.path} 
-                    component={routes.system.children.myorders.component}
-                  />
-                  <PrivateRoute auth={routes.system.children.orderdetails.auth} 
-                    path={routes.system.children.orderdetails.path} 
-                    component={routes.system.children.orderdetails.component}
-                  />
-                  <PrivateRoute auth={routes.blacklist.children.list.auth} 
-                    path={routes.blacklist.children.list.path} 
-                    component={routes.blacklist.children.list.component}
-                  />
-                  <PrivateRoute auth={routes.blacklist.children.add.auth} 
-                    path={routes.blacklist.children.add.path} 
-                    component={routes.blacklist.children.add.component}
-                  />
+                  />*/}
+                  
+                  
+                  {/* {routesList.map((route, i) => <PrivateRoute key={i} 
+                    auth={route.auth} 
+                    path={route.path} 
+                    component={route.component}
+                  />)} */}
                 </Switch>  
+                {/* {routes.map((route, i) => <RouteWithSubRoutes key={i} {...route} />)} */}
+                {/* {routes.map((route, i) => <PrivateRoute key={i} route={route} isLogin={isLogin} />)} */}
+                {renderRoutes(routes,{isLogin:2222})}
               </Content>
             </Layout>
           </Layout> 

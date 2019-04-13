@@ -6,7 +6,6 @@ import {
 import { Link } from 'react-router-dom'
 
 import {axios,utiDate,commonRequest} from 'utils';
-import routes from 'routes';
 import {blacklistTypeValueMap,crimeCategoryToText} from 'configs';
 import  {FormItemI} from 'components';
 

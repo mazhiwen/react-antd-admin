@@ -6,7 +6,6 @@ import {
 import { Link } from 'react-router-dom'
 
 import {axios,utiDate,commonRequest} from 'utils';
-import routes from 'routes';
 import {stateList} from 'configs';
 
 import moment from 'moment';
@@ -46,7 +45,7 @@ class OrderDetails extends React.Component{
     let params = '?id=' + id;
     
     this.$Loading.start();
-    axios.get( 'Domain-rulengine/v1/process/apply/info' + params)
+    axios.get( 'company-rulengine/v1/process/apply/info' + params)
     .then(res=>{
       if(res.message == 'ok'){
         //初始化，解决存在缓存的问题。目前对缓存的处理还没找到更好地方法
@@ -228,9 +227,9 @@ class OrderDetails extends React.Component{
     rmaitId = (this.$router.currentRoute.query.rmaitId !== '' && this.$router.currentRoute.query.rmaitId !== undefined) ? this.$router.currentRoute.query.rmaitId : '';
     let url = '';
     if(this.$router.currentRoute.query.relatedStatus){
-      url = 'Domain-rulengine/v1/test/apply/info?taskId='+ id +'&rmrrtId=' + rmaitId;//关联单据接口
+      url = 'company-rulengine/v1/test/apply/info?taskId='+ id +'&rmrrtId=' + rmaitId;//关联单据接口
     } else {
-      url = 'Domain-rulengine/v1/test/apply/info?taskId='+ id +'&rmaitId=' + rmaitId;//测试单据接口
+      url = 'company-rulengine/v1/test/apply/info?taskId='+ id +'&rmaitId=' + rmaitId;//测试单据接口
     }
     this.$Loading.start();
     axios.get( url)

@@ -18,8 +18,10 @@ class PrivateRoute extends React.Component{
   
   
   componentDidMount(){
+    
     localForage.getItem(authToken)
       .then((value)=>{
+        
         // 无authtoken 为null
         this.setState({
           isLogin:value
@@ -27,6 +29,7 @@ class PrivateRoute extends React.Component{
       })
   }
   componentDidUpdate(prevProps, prevState){
+
     if(this.props.auth&&this.state.isLogin===null){     
       notification['error']({
         message:'请登录帐号',
@@ -34,7 +37,10 @@ class PrivateRoute extends React.Component{
     }
   }
   render(){
+    
+    // const { component: Component,auth,routes,...rest }= this.props.route;
     const { component: Component,auth,...rest }= this.props;
+    // const {isLogin} =this.props;
     const {isLogin} =this.state;
     if(isLogin===''){
       return (
@@ -42,12 +48,14 @@ class PrivateRoute extends React.Component{
       )
     }
     return(
+      
       <Route
         {...rest}
         render={props =>
           isLogin ? 
           (
-            <Component {...props} />
+            // <Component {...props} routes={routes} isLogin={isLogin}/>
+            <Component {...props}/>
           ) : 
           (
             <Redirect

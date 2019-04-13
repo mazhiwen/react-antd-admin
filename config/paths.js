@@ -10,9 +10,9 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 const packageJsonObj=require('../package.json');
-//contextPath 取packagejson 文件 Domain.contextPath字段 作为
+//contextPath 取packagejson 文件 company.contextPath字段 作为
 //public build dist目录 index.html base url
-const contextPath=packageJsonObj.Domain.contextPath;
+const contextPath=packageJsonObj.company.contextPath;
 
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');

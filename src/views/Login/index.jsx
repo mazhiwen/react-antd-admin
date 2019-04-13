@@ -3,11 +3,11 @@ import {Card, Form, Icon, Input, Button,notification,
   Row,Col
 } from 'antd';
 import {  connect } from 'react-redux';
-import { authToken, authMobile,
+import { authToken, authMobile,phone,
   XPARTNERCODE,partnerCode,appName,expires, domain,
   name
 } from 'configs';
-import routes from 'routes';
+import {routesMap} from 'routes';
 import {axios,localForage,cookie,validator} from 'utils';
 import {withRouter} from "react-router-dom";
 
@@ -32,13 +32,14 @@ class ComponentInstance extends React.Component {
     // this.historyPush( routes.home.path);
     this.props["form"].validateFields((err, values) => {
       if (!err) {
-        axios.post('Domain-authority/v1/user-login', {...this.params,...values}, { useOrigin: true })
+        axios.post('company-authority/v1/user-login', {...this.params,...values}, { useOrigin: true })
           .then((res) => {
             
             const { data: { code = '', message = '' }, headers } = res;
             const token = headers[authToken];
             const mobile = values.loginName;
-            localForage.setItem(authToken,token)
+            localForage.setItem(authToken,token);
+            localForage.setItem(phone,res.data.result.phone)
             localForage.setItem(name,res.data.result.name)
             if (['11310025', '11310026'].indexOf(code) !== -1) {
               cookie.set({
@@ -83,7 +84,7 @@ class ComponentInstance extends React.Component {
             //   type: 'SET_LOGINSTATUS',
             //   LOGINSTATUS:true
             // })
-            this.historyPush( routes.home.path);
+            this.historyPush( routesMap.home.path);
             
           }) 
       }
@@ -112,7 +113,7 @@ class ComponentInstance extends React.Component {
       if(errors&&errors.loginName){
         
       }else{
-        axios.post('Domain-authority/v1/send-mobile-code', {
+        axios.post('company-authority/v1/send-mobile-code', {
           mobile: this.props["form"].getFieldValue('loginName'),
           type: '01',
         })

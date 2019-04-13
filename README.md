@@ -34,11 +34,18 @@ export NODE_ENV=integration
 ```
 
 
+
 ## 本地build调试
 
 修改 ./config/paths.js  appBuild为  resolveApp('dist')  
 修改 ./config/webpack.config.prod.js  HtmlWebpackPlugin.href 为  '/'  
+env.js  BASE_HREF:'./'
+public index.html  base href = './'
 
+## 不做base 地址
+做本地build步骤以及：
+注释 utils/history.js 的 basename:contextPath
+script/start.js 改为 openBrowser(urls.localUrlForBrowser);
 
 ## 菜单激活规则
 菜单和路由严格统一，一级路由/二级路由/...级路由  
@@ -48,10 +55,21 @@ export NODE_ENV=integration
 
 
 * 访问地址:host/contextPath/route  
-修改./package.json Domain.contextPath 
+修改./package.json company.contextPath 
 
 * 访问地址:host/route
 
+
+
+## 访问地址 
+
+
+
+##配置统一权限
+
+
+
+## 接口api
 
 
 
